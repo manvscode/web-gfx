@@ -175,7 +175,6 @@ export class Box {
 		gl.vertexAttribPointer( shader.attributes.vertex, 3, gl.FLOAT, false, 0, 0 );
 		this.gfx.assertNoError( );
 
-		/*
 		gl.enableVertexAttribArray( shader.attributes.normal );
 		gl.bindBuffer( gl.ARRAY_BUFFER, this.vboNormals );
 		gl.vertexAttribPointer( shader.attributes.normal, 3, gl.FLOAT, false, 0, 0 );
@@ -185,10 +184,9 @@ export class Box {
 		gl.bindBuffer( gl.ARRAY_BUFFER, this.vboTextureCoordinates );
 		gl.vertexAttribPointer( shader.attributes.textureCoord, 2, gl.FLOAT, false, 0, 0 );
 		this.gfx.assertNoError( );
-		*/
 
 		gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.vboIndices );
-		gl.drawElements( gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0 );
+		gl.drawElements( gl.TRIANGLES, this.vboIndices.itemCount, gl.UNSIGNED_SHORT, 0 );
 		this.gfx.assertNoError( );
 
 		gl.disableVertexAttribArray( shader.attributes.vertex );

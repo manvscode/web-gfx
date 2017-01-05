@@ -20,7 +20,8 @@ var gfx = new GFX(canvas, attributes);
 let gl = gfx.getContext();
 gfx.printInfo();
 
-gl.viewport(0, 0, gl.canvas.offsetWidth, gl.canvas.offsetHeight);
+gfx.resize();
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 gl.enable( gl.DEPTH_TEST );
 gl.clearDepth(1.0);
@@ -34,22 +35,19 @@ gl.disable( gl.BLEND );
 gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
 gfx.assertNoError();
 
-gl.clearColor( 0.2, 0.2, 0.2, 1.0 );
-//gl.clearColor( 0, 0, 0, 0.0 );
-
-
+gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
 var angle = 0;
 var delta = 0;
 
 var triangleVertices = [
-   1.0000000000000000,   0.0000000000000000,   0.0000000000000000,
-   1.0000000000000000,   0.0000000000000000,   0.0000000000000000,
+     0.0000000000000001,   1.0000000000000000 -0.02,   0.0000000000000000,
+     1.0000000000000000,   0.0000000000000000,   0.0000000000000000,
 
-  -0.4999999999999999,   0.8660254037844387,   0.0000000000000000,
-   0.0000000000000000,   1.0000000000000000,   0.0000000000000000,
+    -0.8660254037844387,  -0.4999999999999999,   0.0000000000000000,
+     0.0000000000000000,   1.0000000000000000,   0.0000000000000000,
 
-  -0.5000000000000001,  -0.8660254037844386,   0.0000000000000000,
-   0.0000000000000000,   0.0000000000000000,   1.0000000000000000
+     0.8660254037844385,  -0.5000000000000002,   0.0000000000000000,
+     0.0000000000000000,   0.0000000000000000,   1.0000000000000000
 ];
 
 var vboTriangle = gfx.floatBufferCreate( triangleVertices, 6, 3, gl.STATIC_DRAW );
@@ -68,10 +66,12 @@ var spinning_triangle = () => {
 	let now = gfx.now();
 	gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
-	var projectionMatrix = Lib3dMath.Matrix4.IDENTITY;
-	//var projectionMatrix = Lib3dMath.Projections.orthographic( -2 * gfx.getAspectRatio(), 2 * gfx.getAspectRatio(), -2, 2, -10, 10 );
-	var transform = Lib3dMath.Transforms.rotateZ( angle );
-	//var transform = Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(0, 0, -2) ).multiplyMatrix( Lib3dMath.Transforms.rotateZ( angle ) );
+    var aspect = gfx.getAspectRatio();
+
+	var projectionMatrix = Lib3dMath.Projections.orthographic( -2 * aspect, 2 * aspect, -2, 2, -10, 10 );
+	var translation = Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(0, 0, -2) );
+    var orientation = Lib3dMath.Transforms.rotateZ( angle );
+    var transform = translation.multiply( orientation );
 	var modelView = projectionMatrix.multiplyMatrix( transform );
 
 	if( angle >= Lib3dMath.Core.TWO_PI ) {
@@ -83,14 +83,10 @@ var spinning_triangle = () => {
 
 	triangle_shader.use();
 
-	//console.info( "Angle: " + angle );
-
 	triangle_shader.prepare([
 		{ name: Uniform.modelView, value: modelView },
 	], false);
 
-	console.info( "Projection:\n" + projectionMatrix );
-	console.info( "Model View:\n" + modelView );
 
 	gl.bindBuffer( gl.ARRAY_BUFFER, vboTriangle );
 	this.gfx.assertNoError( );
@@ -105,7 +101,7 @@ var spinning_triangle = () => {
 	gl.flush();
 	gfx.requestAnimationFrame( spinning_triangle );
 	delta = gfx.frameDelta( now );
-	//gfx.printFrameRate( delta );
+	gfx.printFrameRate( delta );
 };
 
 spinning_triangle();

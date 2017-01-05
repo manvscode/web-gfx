@@ -106,10 +106,16 @@ System.register([], function($__export) {
               if (!uniformLoc) {
                 throw "[GFX] Bad uniform location!";
               }
-              if (val instanceof Number) {
-                if (debug)
-                  console.log("[GFX] Setting float uniform " + name + " with value: " + val);
-                gl.uniform1f(uniformLoc, val);
+              if (typeof(val) == "number") {
+                if (Number.isInteger(val)) {
+                  if (debug)
+                    console.log("[GFX] Setting integer uniform " + name + " with value: " + val);
+                  gl.uniform1i(uniformLoc, val);
+                } else {
+                  if (debug)
+                    console.log("[GFX] Setting float uniform " + name + " with value: " + val);
+                  gl.uniform1f(uniformLoc, val);
+                }
                 this.gfx.assertNoError();
               } else if (val instanceof Lib3dMath.Vector3) {
                 if (debug)
@@ -186,6 +192,29 @@ System.register([], function($__export) {
           this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         }
         return ($traceurRuntime.createClass)(GFX, {
+          requestAnimationFrame: function(func) {
+            window.requestAnimationFrame(func);
+          },
+          initialize: function(setup_func) {
+            var gfx_instance = this;
+            this.gl.canvas.addEventListener("webglcontextlost", function(event) {
+              console.log("[GFX] Context lost.");
+              event.preventDefault();
+            }, false);
+            this.gl.canvas.addEventListener("webglcontextrestored", function(event) {
+              console.log("[GFX] Context restored.");
+              setup_func(gfx_instance);
+            }, false);
+            setup_func(this);
+          },
+          render: function(render_func) {
+            render_func(this);
+            window.requestAnimationFrame(this.render.bind(this, render_func));
+          },
+          run: function(initialization, render) {
+            this.initialize(initialization);
+            this.render(render);
+          },
           assertNoError: function() {
             var err = this.gl.getError();
             var errorStrings = {};
@@ -197,7 +226,9 @@ System.register([], function($__export) {
             errorStrings[this.gl.INVALID_VALUE] = "Invalid value";
             errorStrings[this.gl.CONTEXT_LOST_WEBGL] = "Context lost WebGL";
             if (err != this.gl.NO_ERROR) {
-              throw "[GFX] Error (" + errorStrings[err] + ")";
+              if (err != this.gl.CONTEXT_LOST_WEBGL || !this.initialization_fxn) {
+                throw "[GFX] Error (" + errorStrings[err] + ")";
+              }
             }
           },
           getContext: function() {
@@ -267,18 +298,9 @@ System.register([], function($__export) {
             }
             this.printFrameRate.frame_rate_call_count += 1;
           },
-          requestAnimationFrame: function(func) {
-            window.requestAnimationFrame(func);
-          },
-          render: function(draw_func) {
-            draw_func.bind(this);
-            console.info(draw_func);
-            draw_func();
-            window.requestAnimationFrame(this.render, this.gl.canvas);
-          },
           bufferCreate: function(buffer, target, usage) {
             GFX.validateArgs(this.bufferCreate.name, arguments);
-            var bufferObject = gl.createBuffer();
+            var bufferObject = this.gl.createBuffer();
             if (bufferObject) {
               this.gl.bindBuffer(target, bufferObject);
               this.gl.bufferData(target, buffer, usage);
@@ -366,7 +388,6 @@ System.register([], function($__export) {
               }
               throw "[GFX] GLSL Compilation Error";
             }
-            var linkingStatus = true;
             var program = this.gl.createProgram();
             if (!program) {
               throw "[GFX] Unable to create GLSL program.";
@@ -376,7 +397,7 @@ System.register([], function($__export) {
               this.gl.attachShader(program, shader$__8);
             }
             this.gl.linkProgram(program);
-            linkingStatus = this.gl.getProgramParameter(program, this.gl.LINK_STATUS);
+            var linkingStatus = this.gl.getProgramParameter(program, this.gl.LINK_STATUS);
             if (linkingStatus) {
               console.log("[GFX] Shader linked.");
             } else {
@@ -418,6 +439,81 @@ System.register([], function($__export) {
             xmlhttp.open("GET", url, async);
             xmlhttp.send();
             return result;
+          },
+          loadTexture2D: function(url) {
+            var min_filter = arguments[1] !== (void 0) ? arguments[1] : null;
+            var mag_filter = arguments[2] !== (void 0) ? arguments[2] : null;
+            var wrap_s = arguments[3] !== (void 0) ? arguments[3] : null;
+            var wrap_t = arguments[4] !== (void 0) ? arguments[4] : null;
+            var gl = this.getContext();
+            var generate_mipmaps = false;
+            if (!min_filter) {
+              min_filter = gl.NEAREST;
+            }
+            if (!mag_filter) {
+              mag_filter = gl.LINEAR;
+            }
+            if (!wrap_s) {
+              wrap_s = gl.CLAMP_TO_EDGE;
+            }
+            if (!wrap_t) {
+              wrap_t = gl.CLAMP_TO_EDGE;
+            }
+            switch (min_filter) {
+              case gl.NEAREST_MIPMAP_LINEAR:
+              case gl.NEAREST_MIPMAP_NEAREST:
+              case gl.LINEAR_MIPMAP_LINEAR:
+              case gl.LINEAR_MIPMAP_NEAREST:
+                generate_mipmaps = true;
+                break;
+              default:
+                break;
+            }
+            switch (mag_filter) {
+              case gl.NEAREST_MIPMAP_LINEAR:
+              case gl.NEAREST_MIPMAP_NEAREST:
+                mag_filter = gl.NEAREST;
+                break;
+              case gl.LINEAR_MIPMAP_LINEAR:
+              case gl.LINEAR_MIPMAP_NEAREST:
+                mag_filter = gl.LINEAR;
+                break;
+              default:
+                break;
+            }
+            var texture = gl.createTexture();
+            var image = new Image();
+            image.src = url;
+            image.addEventListener('load', function() {
+              gl.bindTexture(gl.TEXTURE_2D, texture);
+              gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, min_filter);
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, mag_filter);
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrap_s);
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap_t);
+              if (generate_mipmaps) {
+                if (!GFX.isPowerOf2(image.width) || !GFX.isPowerOf2(image.height)) {
+                  throw "[GFX] Texture does not have power of two dimensions.";
+                } else {
+                  console.log("[GFX] Generating mipmaps for texture: " + url);
+                  gl.generateMipmap(gl.TEXTURE_2D);
+                }
+              }
+            });
+            return texture;
+          },
+          resize: function() {
+            var setviewport = arguments[0] !== (void 0) ? arguments[0] : false;
+            var gl = this.getContext();
+            var displayWidth = gl.canvas.clientWidth;
+            var displayHeight = gl.canvas.clientHeight;
+            if (gl.canvas.width != displayWidth || gl.canvas.height != displayHeight) {
+              gl.canvas.width = displayWidth;
+              gl.canvas.height = displayHeight;
+            }
+            if (setviewport) {
+              gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+            }
           }
         }, {
           isSupported: function() {
@@ -435,6 +531,9 @@ System.register([], function($__export) {
                 console.error("[GFX] Argument is undefined in " + functionName + ".");
               }
             }
+          },
+          isPowerOf2: function(n) {
+            return (n & (n - 1)) == 0;
           }
         });
       }();

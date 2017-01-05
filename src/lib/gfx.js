@@ -114,9 +114,15 @@ export class Shader {
 				throw "[GFX] Bad uniform location!";
 			}
 
-			if( val instanceof Number ) {
-				if( debug ) console.log( "[GFX] Setting float uniform " + name + " with value: " + val );
-				gl.uniform1f( uniformLoc, val );
+			if( typeof(val) == "number" ) {
+                if( Number.isInteger(val) ) {
+				    if( debug ) console.log( "[GFX] Setting integer uniform " + name + " with value: " + val );
+				    gl.uniform1i( uniformLoc, val );
+                }
+                else {
+				    if( debug ) console.log( "[GFX] Setting float uniform " + name + " with value: " + val );
+				    gl.uniform1f( uniformLoc, val );
+                }
 				this.gfx.assertNoError();
 			}
 			else if( val instanceof Lib3dMath.Vector3 ) {
@@ -203,6 +209,34 @@ export class GFX {
 		return true;
 	}
 
+	requestAnimationFrame( func ) {
+		window.requestAnimationFrame( func );
+	}
+
+    initialize( setup_func ) {
+        let gfx_instance = this;
+        this.gl.canvas.addEventListener( "webglcontextlost", (event) => {
+            console.log( "[GFX] Context lost." );
+            event.preventDefault();
+        }, false);
+        this.gl.canvas.addEventListener( "webglcontextrestored", (event) => {
+            console.log( "[GFX] Context restored." );
+            setup_func(gfx_instance);
+        }, false);
+
+        setup_func(this);
+    }
+
+	render( render_func ) {
+		render_func(this);
+		window.requestAnimationFrame( this.render.bind(this, render_func) );
+	}
+
+    run( initialization, render ) {
+        this.initialize( initialization );
+        this.render( render );
+    }
+
 	assertNoError() {
 		let err = this.gl.getError();
 		let errorStrings = {};
@@ -216,7 +250,9 @@ export class GFX {
 		errorStrings[ this.gl.CONTEXT_LOST_WEBGL ]            = "Context lost WebGL";
 
 		if( err != this.gl.NO_ERROR ) {
-			throw "[GFX] Error (" + errorStrings[err] + ")";
+		    if( err != this.gl.CONTEXT_LOST_WEBGL || !this.initialization_fxn ) {
+			    throw "[GFX] Error (" + errorStrings[err] + ")";
+            }
 		}
 	}
 
@@ -311,20 +347,9 @@ export class GFX {
 		this.printFrameRate.frame_rate_call_count += 1;
 	}
 
-	requestAnimationFrame( func ) {
-		window.requestAnimationFrame( func );
-	}
-
-	render( draw_func ) {
-		draw_func.bind(this);
-		console.info(draw_func);
-		draw_func();
-		window.requestAnimationFrame( this.render, this.gl.canvas );
-	}
-
 	bufferCreate( buffer, target, usage ) {
 		GFX.validateArgs( this.bufferCreate.name, arguments );
-		let bufferObject = gl.createBuffer();
+		let bufferObject = this.gl.createBuffer();
 		if( bufferObject ) {
 			this.gl.bindBuffer( target, bufferObject );
 			this.gl.bufferData( target, buffer, usage );
@@ -441,9 +466,7 @@ export class GFX {
 			throw "[GFX] GLSL Compilation Error";
 		}
 
-		let linkingStatus = true;
-		let program       = this.gl.createProgram();
-
+		let program = this.gl.createProgram();
 		if( !program ) {
 			throw "[GFX] Unable to create GLSL program.";
 		}
@@ -454,7 +477,7 @@ export class GFX {
 		}
 
 		this.gl.linkProgram( program );
-		linkingStatus = this.gl.getProgramParameter( program, this.gl.LINK_STATUS );
+		let linkingStatus = this.gl.getProgramParameter( program, this.gl.LINK_STATUS );
 
 		if( linkingStatus ) {
 			console.log("[GFX] Shader linked.");
@@ -531,5 +554,96 @@ export class GFX {
 		return result;
 	}
 
+    loadTexture2D( url, min_filter = null, mag_filter = null, wrap_s = null, wrap_t = null ) {
+        let gl = this.getContext();
+        let generate_mipmaps = false;
 
+        if( !min_filter ) {
+            min_filter = gl.NEAREST;
+        }
+        if( !mag_filter ) {
+            mag_filter = gl.LINEAR;
+        }
+        if( !wrap_s ) {
+            wrap_s = gl.CLAMP_TO_EDGE;
+        }
+        if( !wrap_t ) {
+            wrap_t = gl.CLAMP_TO_EDGE;
+        }
+
+        switch( min_filter )
+        {
+            case gl.NEAREST_MIPMAP_LINEAR:
+            case gl.NEAREST_MIPMAP_NEAREST:
+            case gl.LINEAR_MIPMAP_LINEAR:
+            case gl.LINEAR_MIPMAP_NEAREST:
+                generate_mipmaps = true;
+                break;
+            default:
+                break;
+        }
+
+        /* Only GL_LINEAR and GL_NEAREST are valid magnification filters */
+        switch( mag_filter )
+        {
+            case gl.NEAREST_MIPMAP_LINEAR:
+            case gl.NEAREST_MIPMAP_NEAREST:
+                mag_filter = gl.NEAREST;
+                break;
+            case gl.LINEAR_MIPMAP_LINEAR:
+            case gl.LINEAR_MIPMAP_NEAREST:
+                mag_filter = gl.LINEAR;
+                break;
+            default:
+                break;
+        }
+
+        var texture = gl.createTexture();
+        var image = new Image();
+        image.src = url;
+        image.addEventListener('load', function() {
+            // Now that the image has loaded make copy it to the texture.
+            gl.bindTexture( gl.TEXTURE_2D, texture );
+            gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image );
+
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, min_filter );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, mag_filter );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrap_s );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap_t );
+
+            if( generate_mipmaps )
+            {
+                if (!GFX.isPowerOf2(image.width) || !GFX.isPowerOf2(image.height)) {
+                    throw "[GFX] Texture does not have power of two dimensions.";
+                }
+                else {
+                    console.log( "[GFX] Generating mipmaps for texture: " + url );
+                    gl.generateMipmap( gl.TEXTURE_2D );
+                }
+            }
+        });
+
+        return texture;
+    }
+
+
+
+
+    resize(setviewport = false) {
+		var gl = this.getContext();
+        var displayWidth  = gl.canvas.clientWidth;
+        var displayHeight = gl.canvas.clientHeight;
+        if( gl.canvas.width != displayWidth || gl.canvas.height != displayHeight ) {
+            gl.canvas.width  = displayWidth;
+            gl.canvas.height = displayHeight;
+        }
+
+        if( setviewport ) {
+            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        }
+    }
+
+    static isPowerOf2( n ) {
+        return (n & (n - 1)) == 0;
+    }
 }
