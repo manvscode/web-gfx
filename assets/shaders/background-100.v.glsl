@@ -9,6 +9,5 @@ varying vec3 f_color;
 
 void main( ) {
 	gl_Position  = vec4( a_vertex.x, a_vertex.y, 0, 1.0 );
-    //gl_PointSize = 3.0;
     f_color     = a_color;
 }

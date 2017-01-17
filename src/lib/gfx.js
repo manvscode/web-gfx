@@ -52,7 +52,15 @@ export const Uniform = {
 	projectionMatrix: "projectionMatrix",
 	modelView: "modelView",
 	normalMatrix: "normalMatrix",
-	texture: "texture"
+	color: "color",
+	materialDiffuse: "materialDiffuse",
+	materialSpecular: "materialSpecular",
+	texture0: "texture0",
+	texture1: "texture1",
+	texture2: "texture2",
+	texture3: "texture3",
+	texture4: "texture4",
+	texture5: "texture5"
 };
 
 export class Shader {
@@ -460,7 +468,8 @@ export class GFX {
 		}
 
 		if( !isCompilationGood ) {
-			for( let shader in shaderObjects ) {
+			for( let key in shaderObjects ) {
+				let shader = shaderObjects[ key ];
 				this.gl.deleteShader( shader );
 			}
 			throw "[GFX] GLSL Compilation Error";

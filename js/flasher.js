@@ -45,7 +45,15 @@ const $___46__46__47_src_47_lib_47_gfx_46_js__ = (function() {
     projectionMatrix: "projectionMatrix",
     modelView: "modelView",
     normalMatrix: "normalMatrix",
-    texture: "texture"
+    color: "color",
+    materialDiffuse: "materialDiffuse",
+    materialSpecular: "materialSpecular",
+    texture0: "texture0",
+    texture1: "texture1",
+    texture2: "texture2",
+    texture3: "texture3",
+    texture4: "texture4",
+    texture5: "texture5"
   };
   class Shader {
     constructor(gfx, program, attributes, uniforms) {
@@ -378,7 +386,8 @@ const $___46__46__47_src_47_lib_47_gfx_46_js__ = (function() {
         console.log("[GFX] Shader compiled: " + shaderInfo.url);
       }
       if (!isCompilationGood) {
-        for (let shader in shaderObjects) {
+        for (let key in shaderObjects) {
+          let shader = shaderObjects[key];
           this.gl.deleteShader(shader);
         }
         throw "[GFX] GLSL Compilation Error";

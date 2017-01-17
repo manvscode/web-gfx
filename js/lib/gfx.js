@@ -59,7 +59,15 @@ System.register([], function($__export) {
         projectionMatrix: "projectionMatrix",
         modelView: "modelView",
         normalMatrix: "normalMatrix",
-        texture: "texture"
+        color: "color",
+        materialDiffuse: "materialDiffuse",
+        materialSpecular: "materialSpecular",
+        texture0: "texture0",
+        texture1: "texture1",
+        texture2: "texture2",
+        texture3: "texture3",
+        texture4: "texture4",
+        texture5: "texture5"
       };
       $__export("Uniform", Uniform);
       Shader = function() {
@@ -383,8 +391,9 @@ System.register([], function($__export) {
               console.log("[GFX] Shader compiled: " + shaderInfo.url);
             }
             if (!isCompilationGood) {
-              for (var shader$__6 in shaderObjects) {
-                this.gl.deleteShader(shader$__6);
+              for (var key$__6 in shaderObjects) {
+                var shader$__7 = shaderObjects[key$__6];
+                this.gl.deleteShader(shader$__7);
               }
               throw "[GFX] GLSL Compilation Error";
             }
@@ -392,9 +401,9 @@ System.register([], function($__export) {
             if (!program) {
               throw "[GFX] Unable to create GLSL program.";
             }
-            for (var key$__7 in shaderObjects) {
-              var shader$__8 = shaderObjects[key$__7];
-              this.gl.attachShader(program, shader$__8);
+            for (var key$__8 in shaderObjects) {
+              var shader$__9 = shaderObjects[key$__8];
+              this.gl.attachShader(program, shader$__9);
             }
             this.gl.linkProgram(program);
             var linkingStatus = this.gl.getProgramParameter(program, this.gl.LINK_STATUS);
@@ -410,9 +419,9 @@ System.register([], function($__export) {
             }
             if (markForDeletion) {
               console.log("[GFX] Shaders will be destroyed automatically.");
-              for (var key$__9 in shaderObjects) {
-                var shader$__10 = shaderObjects[key$__9];
-                this.gl.deleteShader(shader$__10);
+              for (var key$__10 in shaderObjects) {
+                var shader$__11 = shaderObjects[key$__10];
+                this.gl.deleteShader(shader$__11);
               }
             }
             return program;
