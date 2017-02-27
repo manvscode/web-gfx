@@ -68,7 +68,9 @@ let oceanBackground = {
 
         gl.disableVertexAttribArray( shader.attributes.vertex );
         gl.disableVertexAttribArray( shader.attributes.color );
-    }
+    },
+	update: function(delta) {
+	}
 };
 
 let oceanFloor = {
@@ -91,7 +93,7 @@ let oceanFloor = {
     render: function(shader) {
         var gl = this.gfx.getContext();
 
-        let mv = gfx.cameraView.multiply( Lib3dMath.Transforms.rigidBodyTransform( this.position, this.orientation, this.scale ) );
+        let mv = gfx.cameraView.multiply( Lib3dMath.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
 
         gfx.shaders.objectShader.prepare([
             { name: "useTexture", value: 1 },
@@ -128,7 +130,9 @@ let oceanFloor = {
         gl.disableVertexAttribArray( shader.attributes.vertex );
         gl.disableVertexAttribArray( shader.attributes.normal );
         gl.disableVertexAttribArray( shader.attributes.textureCoord );
-    }
+    },
+	update: function(delta) {
+	}
 };
 
 let underwaterBase = {
@@ -149,7 +153,9 @@ let underwaterBase = {
     render: function(shader) {
         var gl = this.gfx.getContext();
 
-        let mv = gfx.cameraView.multiply( Lib3dMath.Transforms.rigidBodyTransform( this.position, this.orientation, this.scale ) );
+        let mv = gfx.cameraView.multiply( Lib3dMath.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
+		let normalMatrix = Lib3dMath.Transforms.orientationMatrix3(mv);
+		normalMatrix.invert();
 
         gfx.shaders.objectShader.prepare([
             { name: "useTexture", value: 1 },
@@ -158,7 +164,7 @@ let underwaterBase = {
             { name: Uniform.texture1, value: 1 },
             { name: Uniform.projectionMatrix, transpose: false, value: gfx.perspectiveMatrix },
             { name: Uniform.modelView, transpose: false, value: mv },
-            { name: Uniform.normalMatrix, transpose: false, value: gfx.normalMatrix },
+            { name: Uniform.normalMatrix, transpose: true, value: normalMatrix },
         ]);
 
         gl.activeTexture( gl.TEXTURE0 );
@@ -209,7 +215,9 @@ let underwaterBase = {
         gl.disableVertexAttribArray( shader.attributes.vertex );
         gl.disableVertexAttribArray( shader.attributes.normal );
         gl.disableVertexAttribArray( shader.attributes.textureCoord );
-    }
+    },
+	update: function(delta) {
+	}
 };
 
 let submarine = {
@@ -240,23 +248,18 @@ let submarine = {
         this.vboRightTorpedo           = gfx.bufferCreate( new Float32Array(SubmarineModel.rightTorpedo), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboRightTorpedo.itemSize  = 8;
         this.vboRightTorpedo.itemCount = SubmarineModel.rightTorpedo.length / 8;
+
+		this.yangle = 0;
+		this.angle = 0;
+		this.propAngle = 0;
 	},
 	render: function(shader) {
         var gl = this.gfx.getContext();
 
-        let mv = gfx.cameraView.multiply( Lib3dMath.Transforms.rigidBodyTransform( this.position, this.orientation, this.scale ) );
-		
-		let l = new Lib3dMath.Vector3( mv.m[ 0], mv.m[ 1], mv.m[ 2] );
-		l.normalize();
-		let u = new Lib3dMath.Vector3( mv.m[ 4], mv.m[ 5], mv.m[ 6] );
-		l.normalize();
-		let f = new Lib3dMath.Vector3( mv.m[ 8], mv.m[ 9], mv.m[10] );
-		f.normalize();
-		let normalMatrix = new Lib3dMath.Matrix3(
-			l.x, l.y, l.z,
-			u.x, u.y, u.z,
-			f.x, f.y, f.z
-		);
+		let transform = Lib3dMath.Transforms.rigidBodyTransform( this.orientation,  this.position, this.scale );
+        let mv = gfx.cameraView.multiply( transform );
+
+		let normalMatrix = Lib3dMath.Transforms.orientationMatrix3(mv);
 		normalMatrix.invert();
 
         gfx.shaders.objectShader.prepare([
@@ -266,7 +269,7 @@ let submarine = {
             { name: Uniform.texture1, value: 1 },
             { name: Uniform.projectionMatrix, transpose: false, value: gfx.perspectiveMatrix },
             { name: Uniform.modelView, transpose: false, value: mv },
-            { name: Uniform.normalMatrix, transpose: false, value: normalMatrix },
+            { name: Uniform.normalMatrix, transpose: true, value: normalMatrix },
         ]);
 
         gl.activeTexture( gl.TEXTURE0 );
@@ -310,16 +313,16 @@ let submarine = {
 
         let leftPropModelView = mv
 					.multiply( Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(2.35,-2,3) ) )
-					.multiply( Lib3dMath.Transforms.rotateZ( 100.0 * gfx.angle ) )
+					.multiply( Lib3dMath.Transforms.rotateZ( 100.0 * this.propAngle ) )
 					.multiply( Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(-2.35,2,-3) ) );
 
-		let inverseLeftPropModelView = Lib3dMath.Matrix4.fromMatrix(leftPropModelView);
-		inverseLeftPropModelView.invert();
+		let normalMatrixLeftProp = Lib3dMath.Transforms.orientationMatrix3(leftPropModelView);
+		//normalMatrixLeftProp.invert();
 
         shader.prepare([
             { name: Uniform.color, value: new Lib3dMath.Vector4(0.88, 0.88, 1.0, 1.0) },
             { name: Uniform.modelView, transpose: false, value: leftPropModelView },
-            { name: Uniform.normalMatrix, transpose: false, value: inverseLeftPropModelView },
+            { name: Uniform.normalMatrix, transpose: true, value: normalMatrixLeftProp },
         ]);
 
         gl.bindBuffer( gl.ARRAY_BUFFER, this.vboLeftProp );
@@ -340,12 +343,16 @@ let submarine = {
 
         let rightPropModelView = mv
 					.multiply( Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(-2.35,-2,-3) ) )
-					.multiply( Lib3dMath.Transforms.rotateZ( 180 + 100.0 * gfx.angle ) )
+					.multiply( Lib3dMath.Transforms.rotateZ( 180 + 100.0 * this.propAngle ) )
 					.multiply( Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(2.35,2,3) ) );
+
+		let normalMatrixRightProp = Lib3dMath.Transforms.orientationMatrix3(rightPropModelView);
+		//normalMatrixRightProp.invert();
 
         shader.prepare([
             { name: Uniform.color, value: new Lib3dMath.Vector4(0.88, 0.88, 1.0, 1.0) },
             { name: Uniform.modelView, transpose: false, value: rightPropModelView },
+            { name: Uniform.normalMatrix, transpose: true, value: normalMatrixRightProp },
         ]);
 
         gl.bindBuffer( gl.ARRAY_BUFFER, this.vboRightProp );
@@ -367,6 +374,7 @@ let submarine = {
         shader.prepare([
             { name: Uniform.color, value: new Lib3dMath.Vector4(1.0, 0.70, 0.70, 1.0) },
             { name: Uniform.modelView, transpose: false, value: mv },
+            { name: Uniform.normalMatrix, transpose: false, value: normalMatrix },
         ]);
 
         gl.bindBuffer( gl.ARRAY_BUFFER, this.vboLeftTorpedo );
@@ -405,6 +413,39 @@ let submarine = {
         gl.disableVertexAttribArray( shader.attributes.vertex );
         gl.disableVertexAttribArray( shader.attributes.normal );
         gl.disableVertexAttribArray( shader.attributes.textureCoord );
+	},
+	update: function(delta) {
+		let XRADIUS = 34;
+		let ZRADIUS = 26;
+    	let center = new Lib3dMath.Vector3(8, 0, 4);
+    	let p = new Lib3dMath.Vector3(center.x + XRADIUS * Math.cos(this.angle), 10 + center.y + 7 * Math.sin(this.yangle), center.z + ZRADIUS * Math.sin(this.angle));
+
+		let left = new Lib3dMath.Vector3( p.x - center.x, p.y - center.y, p.z - center.z );
+		let forward = left.crossProduct( Lib3dMath.Vector3.YUNIT );
+
+    	this.position = Lib3dMath.Transforms.translate( p );
+		this.orientation = Lib3dMath.Transforms.orientationMatrix4( forward, left, new Lib3dMath.Vector3(0,1,0) );
+
+		if( this.angle > Math.PI * 2 ) {
+			this.angle = 0;
+		}
+		else {
+			this.angle += 0.0006 * delta;
+		}
+
+		if( this.yangle > Math.PI * 2 ) {
+			this.yangle = 0;
+		}
+		else {
+			this.yangle += 0.0001 * delta;
+		}
+
+		if( this.propAngle > Math.PI * 2 ) {
+			this.propAngle = 0;
+		}
+		else {
+			this.propAngle += 0.0002 * delta;
+		}
 	}
 };
 
@@ -485,15 +526,13 @@ var setup = (gfx) => {
     underwaterBase.orientation = Lib3dMath.Transforms.rotateY(-45.0);
     underwaterBase.scale       = Lib3dMath.Transforms.scale( new Lib3dMath.Vector3(1.3, 1.3, 1.3) );
     underwaterBase.create(gfx);
-    //gfx.objects.push(underwaterBase);
+    gfx.objects.push(underwaterBase);
 
 
     submarine.texture     = hullTexture;
-    //submarine.position    = Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(0,10,-18) );
-    submarine.position    = Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(0,10,0) );
-    submarine.orientation = Lib3dMath.Transforms.rotateY(90.0);
-    //submarine.scale       = Lib3dMath.Transforms.scale( new Lib3dMath.Vector3(0.5, 0.5, 0.5) );
-    submarine.scale       = Lib3dMath.Transforms.scale( new Lib3dMath.Vector3(1.3, 1.3, 1.3) );
+    submarine.position    = Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(0,10,-18) );
+    submarine.orientation = Lib3dMath.Transforms.rotateY(0.0);
+    submarine.scale       = Lib3dMath.Transforms.scale( new Lib3dMath.Vector3(0.5, 0.5, 0.5) );
     submarine.create(gfx);
     gfx.objects.push(submarine);
 
@@ -525,7 +564,8 @@ var render = (gfx) => {
     oceanBackground.render();
 
     var position = new Lib3dMath.Vector3(20.0, 10.0, 50.0);
-	gfx.perspectiveMatrix = Lib3dMath.Projections.perspective( Lib3dMath.Core.toRadians(50.0), gfx.getAspectRatio(), 0.1, 10000.0 );
+    //var position = new Lib3dMath.Vector3(-20.0, 10.0, 50.0);
+	gfx.perspectiveMatrix = Lib3dMath.Projections.perspective( Lib3dMath.Core.toRadians(60.0), gfx.getAspectRatio(), 0.1, 1000.0 );
 	gfx.cameraView = Lib3dMath.Transforms.lookAt( position, new Lib3dMath.Vector3(0, 8, 0), Lib3dMath.Vector3.YUNIT ).multiply(Lib3dMath.Transforms.rotateY( gfx.angle ) );
 	//gfx.cameraView = Lib3dMath.Transforms.translate( position ).multiply(Lib3dMath.Transforms.rotateY( gfx.angle ) );
     gfx.normalMatrix = new Lib3dMath.Matrix3(
@@ -539,8 +579,8 @@ var render = (gfx) => {
 		gfx.angle = 0.0;
 	}
 	else {
-		//gfx.angle += 0.00005 * gfx.delta;
-		gfx.angle += 0.0001 * gfx.delta;
+		gfx.angle += 0.00005 * gfx.delta;
+		//gfx.angle += 0.0001 * gfx.delta;
 	}
 
 	if( now >= (gfx.lastCausticUpdate + gfx.causticUpdateFreq) ) {
@@ -553,6 +593,7 @@ var render = (gfx) => {
 	for( let key in gfx.objects ) {
 		let o = gfx.objects[ key ];
 		o.render( gfx.shaders.objectShader );
+		o.update( gfx.delta );
 	}
 
 	gl.flush();

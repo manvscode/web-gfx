@@ -48,7 +48,8 @@ void main( ) {
 		//vec4 finalTexel = mix( texel0, texel1, texel0.a );
 		vec4 finalTexel = normalize(u_color * texel0 * texel1);
     	color = vec4( finalTexel.rgb * f_light_intensity, 1.0);
-		gl_FragColor = fog_exp( color, FOG_COLOR, 0.013 );
+		//gl_FragColor = color;
+		gl_FragColor = fog_exp( color, FOG_COLOR, 0.019 );
 	}
 	else {
 #if 0

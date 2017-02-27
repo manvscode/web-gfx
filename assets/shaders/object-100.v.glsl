@@ -35,7 +35,6 @@ void main( ) {
 
     // Convert normal and position to eye coords
 	vec3 tnorm = normalize( u_normal_matrix * f_normal );
-	vec3 light_direction_eye_space = normalize(u_normal_matrix * u_light_direction);
 
-	f_light_intensity = clamp( u_light_color * max( dot(light_direction_eye_space, tnorm), 0.0 ), 0.0, 1.0);
+	f_light_intensity = u_light_color * max( dot(u_light_direction, tnorm), 0.0 );
 }
