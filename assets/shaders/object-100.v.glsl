@@ -15,6 +15,9 @@ uniform mat4 u_projection;
 uniform mat4 u_model_view;
 uniform mat3 u_normal_matrix;
 
+uniform vec3 u_light_direction;
+uniform vec3 u_light_color;
+
 
 const vec4 plane_s = vec4( 0.5 / 4.0, 0.1 / 10.0, 0.0, 0.0 );
 const vec4 plane_t = vec4( 0.0, 0.1 / 10.0, 0.5 / 4.0, 0.0 );
@@ -29,9 +32,6 @@ void main( ) {
 		1.05 * dot( vec4(a_vertex,1.0), plane_s ),
 		1.05 * dot( vec4(a_vertex,1.0), plane_t )
 	);
-
-    vec3 u_light_direction = normalize( vec3(0.2, 1, 0.3) );
-    vec3 u_light_color = vec3(1.4, 1.4, 1.5);
 
     // Convert normal and position to eye coords
 	vec3 tnorm = normalize( u_normal_matrix * f_normal );
