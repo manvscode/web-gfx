@@ -22,11 +22,11 @@ export class OceanFloor extends Renderable {
 	render(shader) {
         var gl = this.gfx.getContext();
 
-        let mv = gfx.cameraView.multiply( Lib3dMath.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
+        let mv = gfx.cameraView.multiply( GFX.Math.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
 
         shader.prepare([
             { name: "useTexture", value: 1 },
-            { name: Uniform.color, value: new Lib3dMath.Vector4(1.0, 1.0, 1.0, 1.0) },
+            { name: Uniform.color, value: new GFX.Math.Vector4(1.0, 1.0, 1.0, 1.0) },
             { name: Uniform.texture0, value: 0 },
             { name: Uniform.texture1, value: 1 },
             { name: Uniform.projectionMatrix, transpose: false, value: gfx.perspectiveMatrix },

@@ -20,13 +20,13 @@ export class UnderwaterBase extends Renderable {
 	render(shader) {
         var gl = this.gfx.getContext();
 
-        let mv = gfx.cameraView.multiply( Lib3dMath.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
-		let normalMatrix = Lib3dMath.Transforms.orientationMatrix3(mv);
+        let mv = gfx.cameraView.multiply( GFX.Math.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
+		let normalMatrix = GFX.Math.Transforms.orientationMatrix3(mv);
 		normalMatrix.invert();
 
         shader.prepare([
             { name: "useTexture", value: 1 },
-            { name: Uniform.color, value: new Lib3dMath.Vector4(1.0, 1.0, 1.0, 1.0) },
+            { name: Uniform.color, value: new GFX.Math.Vector4(1.0, 1.0, 1.0, 1.0) },
             { name: Uniform.texture0, value: 0 },
             { name: Uniform.texture1, value: 1 },
             { name: Uniform.projectionMatrix, transpose: false, value: gfx.perspectiveMatrix },
@@ -55,7 +55,7 @@ export class UnderwaterBase extends Renderable {
 
         shader.prepare([
             { name: "useTexture", value: 0 },
-            { name: Uniform.color, value: new Lib3dMath.Vector4(0.7372549, 0.83921569, 1.0, 0.05) },
+            { name: Uniform.color, value: new GFX.Math.Vector4(0.7372549, 0.83921569, 1.0, 0.05) },
         ]);
 
 

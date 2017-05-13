@@ -1,4 +1,4 @@
-import { GFX, Lib3dMath, Attribute, Uniform, Shader } from './lib/gfx.js';
+import { GFX, Attribute, Uniform, Shader } from './lib/gfx.js';
 
 if( !GFX.isSupported() ) {
 	throw "GFX is not supported!";
@@ -68,13 +68,13 @@ var spinning_triangle = () => {
 
     var aspect = gfx.getAspectRatio();
 
-	var projectionMatrix = Lib3dMath.Projections.orthographic( -2 * aspect, 2 * aspect, -2, 2, -10, 10 );
-	var translation = Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(0, 0, -2) );
-    var orientation = Lib3dMath.Transforms.rotateZ( angle );
+	var projectionMatrix = GFX.Math.Projections.orthographic( -2 * aspect, 2 * aspect, -2, 2, -10, 10 );
+	var translation = GFX.Math.Transforms.translate( new GFX.Math.Vector3(0, 0, -2) );
+    var orientation = GFX.Math.Transforms.rotateZ( angle );
     var transform = translation.multiply( orientation );
 	var modelView = projectionMatrix.multiplyMatrix( transform );
 
-	if( angle >= Lib3dMath.Core.TWO_PI ) {
+	if( angle >= GFX.Math.Core.TWO_PI ) {
 		angle = 0.0;
 	}
 	else {

@@ -14,7 +14,7 @@ elif [ "$1" = "release" ]; then
 	traceur --modules instantiate --dir src/lib js/lib
 
 	# App Files
-	traceur --modules inline --outputLanguage=es6 --out js/app.js -- ./src/app.js ./src/renderable.js ./src/background.js ./src/oceanfloor.js ./src/underwaterbase.js ./src/submarine.js
+	traceur --modules inline --outputLanguage=es6 --out js/app.js --source-maps file -- ./src/app.js ./src/renderable.js ./src/background.js ./src/oceanfloor.js ./src/underwaterbase.js ./src/submarine.js
 	traceur --modules inline --outputLanguage=es6 --out js/flasher.js -- ./src/flasher.js
 	traceur --modules inline --outputLanguage=es6 --out js/triangle.js -- ./src/triangle.js
 else
@@ -23,7 +23,7 @@ else
 	traceur --modules instantiate --dir src/lib js/lib  --source-maps file
 
 	# App Files
-	traceur --modules inline --outputLanguage=es6 --out js/app.js -- ./src/app.js ./src/renderable.js ./src/background.js ./src/oceanfloor.js ./src/underwaterbase.js ./src/submarine.js
+	traceur --modules inline --outputLanguage=es6 --out js/app.js --source-maps file -- ./src/app.js ./src/renderable.js ./src/background.js ./src/oceanfloor.js ./src/underwaterbase.js ./src/submarine.js
 	traceur --modules inline --outputLanguage=es6 --out js/flasher.js  --source-maps file -- ./src/flasher.js
 	traceur --modules inline --outputLanguage=es6 --out js/triangle.js  --source-maps file -- ./src/triangle.js
 fi

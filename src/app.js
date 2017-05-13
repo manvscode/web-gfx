@@ -1,4 +1,4 @@
-import { GFX, Lib3dMath, Attribute, Uniform, Shader } from './lib/gfx.js';
+import { GFX, Attribute, Uniform, Shader } from './lib/gfx.js';
 
 import { Background } from './background.js';
 import { OceanFloor } from './oceanfloor.js';
@@ -87,26 +87,26 @@ var setup = (gfx) => {
 
 	let oceanFloor         = new OceanFloor(gfx);
     oceanFloor.texture     = gfx.loadTexture2D( "assets/textures/oceanfloor.png", gl.LINEAR_MIPMAP_LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT );
-    oceanFloor.position    = Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(0,0,0) );
-    oceanFloor.orientation = Lib3dMath.Matrix4.IDENTITY;
-    oceanFloor.scale       = Lib3dMath.Transforms.scale( new Lib3dMath.Vector3(1.3, 1, 1.3) );
+    oceanFloor.position    = GFX.Math.Transforms.translate( new GFX.Math.Vector3(0,0,0) );
+    oceanFloor.orientation = GFX.Math.Matrix4.IDENTITY;
+    oceanFloor.scale       = GFX.Math.Transforms.scale( new GFX.Math.Vector3(1.3, 1, 1.3) );
     gfx.objects.push(oceanFloor);
 
     let hullTexture = gfx.loadTexture2D( "assets/textures/hull.png", gl.LINEAR_MIPMAP_LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT );
 
 	let underwaterBase         = new UnderwaterBase(gfx);
     underwaterBase.texture     = hullTexture;
-    underwaterBase.position    = Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(8,-10,0) );
-    underwaterBase.orientation = Lib3dMath.Transforms.rotateY(-45.0);
-    underwaterBase.scale       = Lib3dMath.Transforms.scale( new Lib3dMath.Vector3(1.3, 1.3, 1.3) );
+    underwaterBase.position    = GFX.Math.Transforms.translate( new GFX.Math.Vector3(8,-10,0) );
+    underwaterBase.orientation = GFX.Math.Transforms.rotateY(-45.0);
+    underwaterBase.scale       = GFX.Math.Transforms.scale( new GFX.Math.Vector3(1.3, 1.3, 1.3) );
     gfx.objects.push(underwaterBase);
 
 
 	let submarine         = new Submarine(gfx);
     submarine.texture     = hullTexture;
-    submarine.position    = Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(0,10,-18) );
-    submarine.orientation = Lib3dMath.Transforms.rotateY(0.0);
-    submarine.scale       = Lib3dMath.Transforms.scale( new Lib3dMath.Vector3(0.5, 0.5, 0.5) );
+    submarine.position    = GFX.Math.Transforms.translate( new GFX.Math.Vector3(0,10,-18) );
+    submarine.orientation = GFX.Math.Transforms.rotateY(0.0);
+    submarine.scale       = GFX.Math.Transforms.scale( new GFX.Math.Vector3(0.5, 0.5, 0.5) );
     gfx.objects.push(submarine);
 
 	gfx.causticTextures = [];
@@ -128,8 +128,8 @@ var setup = (gfx) => {
     console.info( "WebGL context initialized" );
 };
 
-const LIGHT_DIRECTION = (new Lib3dMath.Vector3(0.2, 1, 0.3)).normalize();
-const LIGHT_COLOR     = new Lib3dMath.Vector3(1.4, 1.4, 1.5);
+const LIGHT_DIRECTION = (new GFX.Math.Vector3(0.2, 1, 0.3)).normalize();
+const LIGHT_COLOR     = new GFX.Math.Vector3(1.4, 1.4, 1.5);
 
 var render = (gfx) => {
     let gl = gfx.getContext();
@@ -139,12 +139,12 @@ var render = (gfx) => {
     let oceanBackgroundShader = this.gfx.shaders.backgroundShader;
     oceanBackground.render(oceanBackgroundShader);
 
-    var position = new Lib3dMath.Vector3(20.0, 10.0, 50.0);
-    //var position = new Lib3dMath.Vector3(-20.0, 10.0, 50.0);
-	gfx.perspectiveMatrix = Lib3dMath.Projections.perspective( Lib3dMath.Core.toRadians(55.0), gfx.getAspectRatio(), 0.1, 1000.0 );
-	gfx.cameraView = Lib3dMath.Transforms.lookAt( position, new Lib3dMath.Vector3(0, 8, 0), Lib3dMath.Vector3.YUNIT ).multiply(Lib3dMath.Transforms.rotateY( gfx.angle ) );
-	//gfx.cameraView = Lib3dMath.Transforms.translate( position ).multiply(Lib3dMath.Transforms.rotateY( gfx.angle ) );
-    gfx.normalMatrix = new Lib3dMath.Matrix3(
+    var position = new GFX.Math.Vector3(20.0, 10.0, 50.0);
+    //var position = new GFX.Math.Vector3(-20.0, 10.0, 50.0);
+	gfx.perspectiveMatrix = GFX.Math.Projections.perspective( GFX.Math.Core.toRadians(55.0), gfx.getAspectRatio(), 0.1, 1000.0 );
+	gfx.cameraView = GFX.Math.Transforms.lookAt( position, new GFX.Math.Vector3(0, 8, 0), GFX.Math.Vector3.YUNIT ).multiply(GFX.Math.Transforms.rotateY( gfx.angle ) );
+	//gfx.cameraView = GFX.Math.Transforms.translate( position ).multiply(GFX.Math.Transforms.rotateY( gfx.angle ) );
+    gfx.normalMatrix = new GFX.Math.Matrix3(
         gfx.cameraView.m[ 0], gfx.cameraView.m[ 1], gfx.cameraView.m[ 2],
         gfx.cameraView.m[ 4], gfx.cameraView.m[ 5], gfx.cameraView.m[ 6],
         gfx.cameraView.m[ 8], gfx.cameraView.m[ 9], gfx.cameraView.m[10]
@@ -164,8 +164,17 @@ var render = (gfx) => {
 		gfx.lastCausticUpdate = now;
 	}
 
-	gfx.shaders.objectShader.use();
 
+	// build shadow map
+
+
+
+
+
+
+
+	// Render objects
+	gfx.shaders.objectShader.use();
 	gfx.shaders.objectShader.prepare([
 		{ name: "lightDirection", value: LIGHT_DIRECTION },
 		{ name: "lightColor", value: LIGHT_COLOR }

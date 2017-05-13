@@ -1,17 +1,3 @@
-
-export var Lib3dMath = {
-		Core:        lib3dmath,
-		Transforms:  lib3dmath.transforms,
-		Projections: lib3dmath.transforms.projections,
-		Vector2:     lib3dmath.Vec2,
-		Vector3:     lib3dmath.Vec3,
-		Vector4:     lib3dmath.Vec4,
-		Matrix2:     lib3dmath.Mat2,
-		Matrix3:     lib3dmath.Mat3,
-		Matrix4:     lib3dmath.Mat4,
-		Quaternion:  lib3dmath.Quat,
-};
-
 export class Color {
 	constructor(r, g, b, a) {
 		this.r = r || 0;
@@ -133,17 +119,17 @@ export class Shader {
                 }
 				this.gfx.assertNoError();
 			}
-			else if( val instanceof Lib3dMath.Vector3 ) {
+			else if( val instanceof GFX.Math.Vector3 ) {
 				if( debug ) console.log( "[GFX] Setting vector3 uniform " + name + " with value: " + val );
 				gl.uniform3fv( uniformLoc, new Float32Array([val.x, val.y, val.z]) );
 				this.gfx.assertNoError();
 			}
-			else if( val instanceof Lib3dMath.Vector4 ) {
+			else if( val instanceof GFX.Math.Vector4 ) {
 				if( debug ) console.log( "[GFX] Setting vector4 uniform " + name + " with value: " + val );
 				gl.uniform4fv( uniformLoc, new Float32Array([val.x, val.y, val.z, val.w]) );
 				this.gfx.assertNoError();
 			}
-			else if( val instanceof Lib3dMath.Matrix3 ) {
+			else if( val instanceof GFX.Math.Matrix3 ) {
 				let tr = uniformValueDesc.transpose;
 				if( tr ) {
 					val.transpose();
@@ -152,7 +138,7 @@ export class Shader {
 				gl.uniformMatrix3fv( uniformLoc, false, new Float32Array(val.m) );
 				this.gfx.assertNoError();
 			}
-			else if( val instanceof Lib3dMath.Matrix4 ) {
+			else if( val instanceof GFX.Math.Matrix4 ) {
 				let tr = uniformValueDesc.transpose;
 				if( tr ) {
 					val.transpose();
@@ -169,6 +155,21 @@ export class Shader {
 }
 
 export class GFX {
+	static get Math() {
+		return {
+			Core:        lib3dmath,
+			Transforms:  lib3dmath.transforms,
+			Projections: lib3dmath.transforms.projections,
+			Vector2:     lib3dmath.Vec2,
+			Vector3:     lib3dmath.Vec3,
+			Vector4:     lib3dmath.Vec4,
+			Matrix2:     lib3dmath.Mat2,
+			Matrix3:     lib3dmath.Mat3,
+			Matrix4:     lib3dmath.Mat4,
+			Quaternion:  lib3dmath.Quat,
+		};
+	}
+
 	constructor(canvas, attributes) {
 		if( !attributes ) {
 			// load defaults

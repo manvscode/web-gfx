@@ -38,15 +38,15 @@ export class Submarine extends Renderable {
 	render(shader) {
         var gl = this.gfx.getContext();
 
-		let transform = Lib3dMath.Transforms.rigidBodyTransform( this.orientation,  this.position, this.scale );
+		let transform = GFX.Math.Transforms.rigidBodyTransform( this.orientation,  this.position, this.scale );
         let mv = gfx.cameraView.multiply( transform );
 
-		let normalMatrix = Lib3dMath.Transforms.orientationMatrix3(mv);
+		let normalMatrix = GFX.Math.Transforms.orientationMatrix3(mv);
 		normalMatrix.invert();
 
         shader.prepare([
             { name: "useTexture", value: 1 },
-            { name: Uniform.color, value: new Lib3dMath.Vector4(1.0, 1.0, 1.0, 1.0) },
+            { name: Uniform.color, value: new GFX.Math.Vector4(1.0, 1.0, 1.0, 1.0) },
             { name: Uniform.texture0, value: 0 },
             { name: Uniform.texture1, value: 1 },
             { name: Uniform.projectionMatrix, transpose: false, value: gfx.perspectiveMatrix },
@@ -74,7 +74,7 @@ export class Submarine extends Renderable {
         this.gfx.assertNoError( );
 
         shader.prepare([
-            { name: Uniform.color, value: new Lib3dMath.Vector4(0.95, 0.95, 0.95, 1.0) },
+            { name: Uniform.color, value: new GFX.Math.Vector4(0.95, 0.95, 0.95, 1.0) },
         ]);
 
         gl.bindBuffer( gl.ARRAY_BUFFER, this.vboDivePlane );
@@ -94,15 +94,15 @@ export class Submarine extends Renderable {
         this.gfx.assertNoError( );
 
         let leftPropModelView = mv
-					.multiply( Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(2.35,-2,3) ) )
-					.multiply( Lib3dMath.Transforms.rotateZ( 100.0 * this.propAngle ) )
-					.multiply( Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(-2.35,2,-3) ) );
+					.multiply( GFX.Math.Transforms.translate( new GFX.Math.Vector3(2.35,-2,3) ) )
+					.multiply( GFX.Math.Transforms.rotateZ( 100.0 * this.propAngle ) )
+					.multiply( GFX.Math.Transforms.translate( new GFX.Math.Vector3(-2.35,2,-3) ) );
 
-		let normalMatrixLeftProp = Lib3dMath.Transforms.orientationMatrix3(leftPropModelView);
+		let normalMatrixLeftProp = GFX.Math.Transforms.orientationMatrix3(leftPropModelView);
 		//normalMatrixLeftProp.invert();
 
         shader.prepare([
-            { name: Uniform.color, value: new Lib3dMath.Vector4(0.88, 0.88, 1.0, 1.0) },
+            { name: Uniform.color, value: new GFX.Math.Vector4(0.88, 0.88, 1.0, 1.0) },
             { name: Uniform.modelView, transpose: false, value: leftPropModelView },
             { name: Uniform.normalMatrix, transpose: true, value: normalMatrixLeftProp },
         ]);
@@ -124,15 +124,15 @@ export class Submarine extends Renderable {
         this.gfx.assertNoError( );
 
         let rightPropModelView = mv
-					.multiply( Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(-2.35,-2,-3) ) )
-					.multiply( Lib3dMath.Transforms.rotateZ( 180 + 100.0 * this.propAngle ) )
-					.multiply( Lib3dMath.Transforms.translate( new Lib3dMath.Vector3(2.35,2,3) ) );
+					.multiply( GFX.Math.Transforms.translate( new GFX.Math.Vector3(-2.35,-2,-3) ) )
+					.multiply( GFX.Math.Transforms.rotateZ( 180 + 100.0 * this.propAngle ) )
+					.multiply( GFX.Math.Transforms.translate( new GFX.Math.Vector3(2.35,2,3) ) );
 
-		let normalMatrixRightProp = Lib3dMath.Transforms.orientationMatrix3(rightPropModelView);
+		let normalMatrixRightProp = GFX.Math.Transforms.orientationMatrix3(rightPropModelView);
 		//normalMatrixRightProp.invert();
 
         shader.prepare([
-            { name: Uniform.color, value: new Lib3dMath.Vector4(0.88, 0.88, 1.0, 1.0) },
+            { name: Uniform.color, value: new GFX.Math.Vector4(0.88, 0.88, 1.0, 1.0) },
             { name: Uniform.modelView, transpose: false, value: rightPropModelView },
             { name: Uniform.normalMatrix, transpose: true, value: normalMatrixRightProp },
         ]);
@@ -154,7 +154,7 @@ export class Submarine extends Renderable {
         this.gfx.assertNoError( );
 
         shader.prepare([
-            { name: Uniform.color, value: new Lib3dMath.Vector4(1.0, 0.70, 0.70, 1.0) },
+            { name: Uniform.color, value: new GFX.Math.Vector4(1.0, 0.70, 0.70, 1.0) },
             { name: Uniform.modelView, transpose: false, value: mv },
             { name: Uniform.normalMatrix, transpose: false, value: normalMatrix },
         ]);
@@ -200,14 +200,14 @@ export class Submarine extends Renderable {
 	update(delta) {
 		let XRADIUS = 34;
 		let ZRADIUS = 26;
-    	let center = new Lib3dMath.Vector3(8, 0, 4);
-    	let p = new Lib3dMath.Vector3(center.x + XRADIUS * Math.cos(this.angle), 10 + center.y + 7 * Math.sin(this.yangle), center.z + ZRADIUS * Math.sin(this.angle));
+    	let center = new GFX.Math.Vector3(8, 0, 4);
+    	let p = new GFX.Math.Vector3(center.x + XRADIUS * Math.cos(this.angle), 10 + center.y + 7 * Math.sin(this.yangle), center.z + ZRADIUS * Math.sin(this.angle));
 
-		let left = new Lib3dMath.Vector3( p.x - center.x, p.y - center.y, p.z - center.z );
-		let forward = left.crossProduct( Lib3dMath.Vector3.YUNIT );
+		let left = new GFX.Math.Vector3( p.x - center.x, p.y - center.y, p.z - center.z );
+		let forward = left.crossProduct( GFX.Math.Vector3.YUNIT );
 
-    	this.position = Lib3dMath.Transforms.translate( p );
-		this.orientation = Lib3dMath.Transforms.orientationMatrix4( forward, left, new Lib3dMath.Vector3(0,1,0) );
+    	this.position = GFX.Math.Transforms.translate( p );
+		this.orientation = GFX.Math.Transforms.orientationMatrix4( forward, left, new GFX.Math.Vector3(0,1,0) );
 
 		if( this.angle > Math.PI * 2 ) {
 			this.angle = 0;
