@@ -141,7 +141,7 @@ var render = (gfx) => {
 
     var position = new GFX.Math.Vector3(20.0, 10.0, 50.0);
     //var position = new GFX.Math.Vector3(-20.0, 10.0, 50.0);
-	gfx.perspectiveMatrix = GFX.Math.Projections.perspective( GFX.Math.Core.toRadians(55.0), gfx.getAspectRatio(), 0.1, 1000.0 );
+	gfx.perspectiveMatrix = GFX.Math.Projections.perspective( GFX.Math.Core.toRadians(65.0), gfx.getAspectRatio(), 1.0, 1000.0 );
 	gfx.cameraView = GFX.Math.Transforms.lookAt( position, new GFX.Math.Vector3(0, 8, 0), GFX.Math.Vector3.YUNIT ).multiply(GFX.Math.Transforms.rotateY( gfx.angle ) );
 	//gfx.cameraView = GFX.Math.Transforms.translate( position ).multiply(GFX.Math.Transforms.rotateY( gfx.angle ) );
     gfx.normalMatrix = new GFX.Math.Matrix3(

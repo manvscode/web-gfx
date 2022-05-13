@@ -157,16 +157,16 @@ export class Shader {
 export class GFX {
 	static get Math() {
 		return {
-			Core:        lib3dmath,
-			Transforms:  lib3dmath.transforms,
-			Projections: lib3dmath.transforms.projections,
-			Vector2:     lib3dmath.Vec2,
-			Vector3:     lib3dmath.Vec3,
-			Vector4:     lib3dmath.Vec4,
-			Matrix2:     lib3dmath.Mat2,
-			Matrix3:     lib3dmath.Mat3,
-			Matrix4:     lib3dmath.Mat4,
-			Quaternion:  lib3dmath.Quat,
+			Core:        m3d,
+			Transforms:  m3d.transforms,
+			Projections: m3d.transforms.projections,
+			Vector2:     m3d.Vec2,
+			Vector3:     m3d.Vec3,
+			Vector4:     m3d.Vec4,
+			Matrix2:     m3d.Mat2,
+			Matrix3:     m3d.Mat3,
+			Matrix4:     m3d.Mat4,
+			Quaternion:  m3d.Quat,
 		};
 	}
 
@@ -640,9 +640,9 @@ export class GFX {
 
 
     resize(setviewport = false) {
-		var gl = this.getContext();
-        var displayWidth  = gl.canvas.clientWidth;
-        var displayHeight = gl.canvas.clientHeight;
+		let gl = this.getContext();
+        let displayWidth  = gl.canvas.clientWidth;
+        let displayHeight = gl.canvas.clientHeight;
         if( gl.canvas.width != displayWidth || gl.canvas.height != displayHeight ) {
             gl.canvas.width  = displayWidth;
             gl.canvas.height = displayHeight;
