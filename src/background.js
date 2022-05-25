@@ -1,8 +1,8 @@
 import { Renderable } from './renderable.js';
 
 export class Background extends Renderable {
-	constructor( gfx ) {
-		super( gfx );
+    constructor( gfx ) {
+        super( gfx );
         let gl = gfx.getContext();
         let bottomColor  = { R: 0.0, G: 0.0, B: 0.0 };
         let surfaceColor = { R: 0.0, G: 0.308803921568627, B: 0.508803921568627 };
@@ -26,11 +26,11 @@ export class Background extends Renderable {
         this.vbo.itemSize  = 6;
         this.vbo.itemCount = rectangle.length / this.vbo.itemSize;
         gfx.assertNoError( );
-	}
+    }
 
-	render(shader) {
+    render(shader) {
         let gl = this.gfx.getContext();
-	    shader.use();
+        shader.use();
 
         gl.bindBuffer( gl.ARRAY_BUFFER, this.vbo );
         gl.enableVertexAttribArray( shader.attributes.vertex );
@@ -48,8 +48,8 @@ export class Background extends Renderable {
 
         gl.disableVertexAttribArray( shader.attributes.vertex );
         gl.disableVertexAttribArray( shader.attributes.color );
-	}
+    }
 
-	update(delta) {
-	}
+    update(delta) {
+    }
 }

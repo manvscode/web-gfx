@@ -4,7 +4,7 @@ import { SubmarineModel } from '../assets/models/sub.js';
 export class Submarine extends Renderable {
 	constructor( gfx ) {
 		super(gfx);
-        var gl = gfx.getContext();
+        let gl = gfx.getContext();
 
         this.vboHull           = gfx.bufferCreate( new Float32Array(SubmarineModel.hull), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboHull.itemSize  = 8;
@@ -36,7 +36,7 @@ export class Submarine extends Renderable {
 	}
 
 	render(shader) {
-        var gl = this.gfx.getContext();
+        let gl = this.gfx.getContext();
 
 		let transform = GFX.Math.Transforms.rigidBodyTransform( this.orientation,  this.position, this.scale );
         let mv = gfx.cameraView.multiply( transform );

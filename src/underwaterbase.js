@@ -4,7 +4,7 @@ import { UnderwaterBaseModel } from '../assets/models/underwater-base.js';
 export class UnderwaterBase extends Renderable {
 	constructor( gfx ) {
 		super(gfx);
-        var gl = gfx.getContext();
+        let gl = gfx.getContext();
 
         this.vboHull           = gfx.bufferCreate( new Float32Array(UnderwaterBaseModel.underwaterbase), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboHull.itemSize  = 8;
@@ -18,7 +18,7 @@ export class UnderwaterBase extends Renderable {
 	}
 
 	render(shader) {
-        var gl = this.gfx.getContext();
+        let gl = this.gfx.getContext();
 
         let mv = gfx.cameraView.multiply( GFX.Math.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
 		let normalMatrix = GFX.Math.Transforms.orientationMatrix3(mv);

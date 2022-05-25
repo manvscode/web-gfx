@@ -1,6 +1,6 @@
 "use strict";
-var m3d = (function() {
-	var M = {
+const m3d = (function() {
+	const M = {
 		toRadians: function(degrees) { return degrees * this.RADIANS_PER_DEGREE; },
 		toDegrees: function(radians) { return radians * this.DEGREES_PER_RANDIAN; },
 		integerMax: function(x, y) { return (x) ^ (((x) ^ (y)) & -((x) < (y))); },
@@ -115,14 +115,14 @@ m3d.Vec2.prototype = {
 	},
 
 	angle: function( v ) {
-		var dot_product = this.dot_product( v );
-		var a_length    = this.magnitude( );
-		var b_length    = v.magnitude( );
+		let dot_product = this.dot_product( v );
+		let a_length    = this.magnitude( );
+		let b_length    = v.magnitude( );
 		return Math.acos( dot_product / ( a_length * b_length ) );
 	},
 
 	normalize: function( ) {
-		var length = this.magnitude();
+		let length = this.magnitude();
 		if( length > 0.0 ) {
 			this.x /= length;
 			this.y /= length;
@@ -167,25 +167,25 @@ m3d.Vec2.prototype = {
 };
 
 m3d.Vec2.ZERO = (function() {
-	var z = new m3d.Vec2( 0, 0 );
+	let z = new m3d.Vec2( 0, 0 );
 	Object.freeze( z );
 	return z;
 }());
 
 m3d.Vec2.ONE = (function() {
-	var z = new m3d.Vec2( 1, 1 );
+	let z = new m3d.Vec2( 1, 1 );
 	Object.freeze( z );
 	return z;
 }());
 
 m3d.Vec2.XUNIT = (function() {
-	var x = new m3d.Vec2( 1, 0 );
+	let x = new m3d.Vec2( 1, 0 );
 	Object.freeze( x );
 	return x;
 }());
 
 m3d.Vec2.YUNIT = (function() {
-	var y = new m3d.Vec2( 0, 1 );
+	let y = new m3d.Vec2( 0, 1 );
 	Object.freeze( y );
 	return y;
 }());
@@ -245,15 +245,15 @@ m3d.Vec3.prototype = {
 	},
 
 	angle: function( v ) {
-		var dot_product = this.dotProduct( v );
-		var a_length    = this.magnitude( );
-		var b_length    = v.magnitude( );
+		let dot_product = this.dotProduct( v );
+		let a_length    = this.magnitude( );
+		let b_length    = v.magnitude( );
 
 		return Math.acos( dot_product / ( a_length * b_length ) );
 	},
 
 	normalize: function( ) {
-		var length = this.magnitude();
+		let length = this.magnitude();
 		if( length > 0.0 ) {
 			this.x /= length;
 			this.y /= length;
@@ -263,7 +263,7 @@ m3d.Vec3.prototype = {
 	},
 
 	isNormalized: function( ) {
-		var length = this.magnitude();
+		let length = this.magnitude();
 		return (Math.abs(length - 1.0) < Number.EPSILON);
 	},
 
@@ -303,31 +303,31 @@ m3d.Vec3.prototype = {
 };
 
 m3d.Vec3.ZERO = (function() {
-	var z = new m3d.Vec3( 0, 0, 0 );
+	let z = new m3d.Vec3( 0, 0, 0 );
 	Object.freeze( z );
 	return z;
 }());
 
 m3d.Vec3.ONE = (function() {
-	var z = new m3d.Vec3( 1, 1, 1 );
+	let z = new m3d.Vec3( 1, 1, 1 );
 	Object.freeze( z );
 	return z;
 }());
 
 m3d.Vec3.XUNIT = (function() {
-	var x = new m3d.Vec3( 1, 0, 0 );
+	let x = new m3d.Vec3( 1, 0, 0 );
 	Object.freeze( x );
 	return x;
 }());
 
 m3d.Vec3.YUNIT = (function() {
-	var y = new m3d.Vec3( 0, 1, 0 );
+	let y = new m3d.Vec3( 0, 1, 0 );
 	Object.freeze( y );
 	return y;
 }());
 
 m3d.Vec3.ZUNIT = (function() {
-	var z = new m3d.Vec3( 0, 0, 1 );
+	let z = new m3d.Vec3( 0, 0, 1 );
 	Object.freeze( z );
 	return z;
 }());
@@ -396,15 +396,15 @@ m3d.Vec4.prototype = {
 	},
 
 	angle: function( v ) {
-		var dot_product = this.dotProduct( v );
-		var a_length    = this.magnitude( );
-		var b_length    = v.magnitude( );
+		let dot_product = this.dotProduct( v );
+		let a_length    = this.magnitude( );
+		let b_length    = v.magnitude( );
 
 		return Math.acos( dot_product / ( a_length * b_length ) );
 	},
 
 	normalize: function( ) {
-		var inverse_length = 1.0 / this.magnitude();
+		let inverse_length = 1.0 / this.magnitude();
 		this.x *= inverse_length;
 		this.y *= inverse_length;
 		this.z *= inverse_length;
@@ -413,7 +413,7 @@ m3d.Vec4.prototype = {
 	},
 
 	isNormalized: function( ) {
-		var length = this.magnitude();
+		let length = this.magnitude();
 		return (Math.abs(length - 1.0) < Number.EPSILON);
 	},
 
@@ -456,37 +456,37 @@ m3d.Vec4.prototype = {
 };
 
 m3d.Vec4.ZERO = (function() {
-	var z = new m3d.Vec4( 0, 0, 0, 0 );
+	let z = new m3d.Vec4( 0, 0, 0, 0 );
 	Object.freeze( z );
 	return z;
 }());
 
 m3d.Vec4.ONE = (function() {
-	var z = new m3d.Vec4( 1, 1, 1, 1 );
+	let z = new m3d.Vec4( 1, 1, 1, 1 );
 	Object.freeze( z );
 	return z;
 }());
 
 m3d.Vec4.XUNIT = (function() {
-	var x = new m3d.Vec4( 1, 0, 0, 0 );
+	let x = new m3d.Vec4( 1, 0, 0, 0 );
 	Object.freeze( x );
 	return x;
 }());
 
 m3d.Vec4.YUNIT = (function() {
-	var y = new m3d.Vec4( 0, 1, 0, 0 );
+	let y = new m3d.Vec4( 0, 1, 0, 0 );
 	Object.freeze( y );
 	return y;
 }());
 
 m3d.Vec4.ZUNIT = (function() {
-	var z = new m3d.Vec4( 0, 0, 1, 0 );
+	let z = new m3d.Vec4( 0, 0, 1, 0 );
 	Object.freeze( z );
 	return z;
 }());
 
 m3d.Vec4.WUNIT = (function() {
-	var w = new m3d.Vec4( 0, 0, 0, 1 );
+	let w = new m3d.Vec4( 0, 0, 0, 1 );
 	Object.freeze( w );
 	return w;
 }());
@@ -542,12 +542,12 @@ m3d.Mat2.prototype = {
 	},
 
 	invert: function( ) {
-		var det = this.determinant( );
+		let det = this.determinant( );
 
 		if( det > Number.EPSILON )
 		{
 			{
-				var tmp = this.m[ 0 ];
+				let tmp = this.m[ 0 ];
 				this.m[ 0 ] = this.m[ 3 ];
 				this.m[ 3 ] = tmp;
 
@@ -568,18 +568,18 @@ m3d.Mat2.prototype = {
 	},
 
 	transpose: function( ) {
-		var tmp = this.m[ 1 ];
+		let tmp = this.m[ 1 ];
 		this.m[ 1 ] = this.m[ 2 ];
 		this.m[ 2 ] = tmp;
 	},
 
 	x_vector: function() {
-		var arr = this.m.slice( 0, 2 );
+		let arr = this.m.slice( 0, 2 );
 		return new m3d.Vec2( arr[0], arr[1] );
 	},
 
 	y_vector: function() {
-		var arr = this.m.slice( 2, 4 );
+		let arr = this.m.slice( 2, 4 );
 		return new m3d.Vec2( arr[0], arr[1] );
 	},
 
@@ -590,14 +590,14 @@ m3d.Mat2.prototype = {
 };
 
 m3d.Mat2.IDENTITY = (function() {
-	var i = new m3d.Mat2( 1, 0,
+	let i = new m3d.Mat2( 1, 0,
 	                  0, 1 );
 	Object.freeze( i );
 	return i;
 }());
 
 m3d.Mat2.ZERO = (function() {
-	var z = new m3d.Mat2( 0, 0,
+	let z = new m3d.Mat2( 0, 0,
 	                  0, 0 );
 	Object.freeze( z );
 	return z;
@@ -635,11 +635,11 @@ m3d.Mat3.fromMatrix = function( m ) {
 };
 
 m3d.Mat3.fromAxisAngle = function( axis, angle ) {
-	var sin_a           = Math.sin(angle);
-	var cos_a           = Math.cos(angle);
-	var one_minus_cos_a = 1 - cos_a;
+	let sin_a           = Math.sin(angle);
+	let cos_a           = Math.cos(angle);
+	let one_minus_cos_a = 1 - cos_a;
 
-    var ax = axis.clone();
+    let ax = axis.clone();
     ax.normalize( );
 
 	return new m3d.Mat3(
@@ -725,9 +725,9 @@ m3d.Mat3.prototype = {
 	},
 
 	transpose: function() {
-		var tmp1 = this.m[ 1 ];
-		var tmp2 = this.m[ 2 ];
-		var tmp3 = this.m[ 5 ];
+		let tmp1 = this.m[ 1 ];
+		let tmp2 = this.m[ 2 ];
+		let tmp3 = this.m[ 5 ];
 
 		this.m[ 1 ] = this.m[ 3 ];
 		this.m[ 2 ] = this.m[ 6 ];
@@ -739,13 +739,13 @@ m3d.Mat3.prototype = {
 	},
 
 	adjoint: function() {
-		var cofactor_matrix = this.cofactor();
+		let cofactor_matrix = this.cofactor();
 		cofactor_matrix.transpose();
 		this.m = cofactor_matrix.m;
 	},
 
 	invert: function() {
-		var det = this.determinant();
+		let det = this.determinant();
 
 		if( Math.abs(det) > Number.EPSILON ) // testing if not zero
 		{
@@ -768,17 +768,17 @@ m3d.Mat3.prototype = {
 	},
 
 	x_vector: function() {
-		var arr = this.m.slice( 0, 4 );
+		let arr = this.m.slice( 0, 4 );
 		return new m3d.Vec3( arr[0], arr[1], arr[2] );
 	},
 
 	y_vector: function() {
-		var arr = this.m.slice( 3, 6 );
+		let arr = this.m.slice( 3, 6 );
 		return new m3d.Vec3( arr[0], arr[1], arr[2] );
 	},
 
 	z_vector: function() {
-		var arr = this.m.slice( 6, 9 );
+		let arr = this.m.slice( 6, 9 );
 		return new m3d.Vec3( arr[0], arr[1], arr[2] );
 	},
 
@@ -790,7 +790,7 @@ m3d.Mat3.prototype = {
 };
 
 m3d.Mat3.IDENTITY = (function() {
-	var i = new m3d.Mat3( 1, 0, 0,
+	let i = new m3d.Mat3( 1, 0, 0,
 	                  0, 1, 0,
 	                  0, 0, 1 );
 	Object.freeze( i );
@@ -798,7 +798,7 @@ m3d.Mat3.IDENTITY = (function() {
 }());
 
 m3d.Mat3.ZERO = (function() {
-	var z = new m3d.Mat3( 0, 0, 0,
+	let z = new m3d.Mat3( 0, 0, 0,
 	                  0, 0, 0,
 	                  0, 0, 0 );
 	Object.freeze( z );
@@ -839,11 +839,11 @@ m3d.Mat4.fromMatrix = function( m ) {
 };
 
 m3d.Mat4.fromAxisAngle = function( axis, angle ) {
-	var sin_a           = scaler_sin(angle);
-	var cos_a           = scaler_cos(angle);
-	var one_minus_cos_a = 1 - cos_a;
+	let sin_a           = scaler_sin(angle);
+	let cos_a           = scaler_cos(angle);
+	let one_minus_cos_a = 1 - cos_a;
 
-	var ax = axis.clone();
+	let ax = axis.clone();
     ax.normalize( );
 
 	return new m3d.Mat4(
@@ -879,10 +879,10 @@ m3d.Mat4.prototype = {
 	},
 
 	determinant: function() {
-		var d1 = this.m[5] * (this.m[10] * this.m[15] - this.m[14] * this.m[11]) - this.m[6] * (this.m[9] * this.m[15] - this.m[13] * this.m[11]) + this.m[7] * (this.m[9] * this.m[14] - this.m[13] * this.m[10]);
-		var d2 = this.m[4] * (this.m[10] * this.m[15] - this.m[14] * this.m[11]) - this.m[6] * (this.m[8] * this.m[15] - this.m[12] * this.m[11]) + this.m[7] * (this.m[8] * this.m[14] - this.m[12] * this.m[10]);
-		var d3 = this.m[4] * (this.m[9] * this.m[15] - this.m[13] * this.m[11]) - this.m[5] * (this.m[8] * this.m[15] - this.m[12] * this.m[11]) + this.m[7] * (this.m[8] * this.m[13] - this.m[12] * this.m[9]);
-		var d4 = this.m[4] * (this.m[9] * this.m[14] - this.m[13] * this.m[10]) - this.m[5] * (this.m[8] * this.m[14] - this.m[12] * this.m[10]) + this.m[6] * (this.m[8] * this.m[13] - this.m[12] * this.m[9]);
+		let d1 = this.m[5] * (this.m[10] * this.m[15] - this.m[14] * this.m[11]) - this.m[6] * (this.m[9] * this.m[15] - this.m[13] * this.m[11]) + this.m[7] * (this.m[9] * this.m[14] - this.m[13] * this.m[10]);
+		let d2 = this.m[4] * (this.m[10] * this.m[15] - this.m[14] * this.m[11]) - this.m[6] * (this.m[8] * this.m[15] - this.m[12] * this.m[11]) + this.m[7] * (this.m[8] * this.m[14] - this.m[12] * this.m[10]);
+		let d3 = this.m[4] * (this.m[9] * this.m[15] - this.m[13] * this.m[11]) - this.m[5] * (this.m[8] * this.m[15] - this.m[12] * this.m[11]) + this.m[7] * (this.m[8] * this.m[13] - this.m[12] * this.m[9]);
+		let d4 = this.m[4] * (this.m[9] * this.m[14] - this.m[13] * this.m[10]) - this.m[5] * (this.m[8] * this.m[14] - this.m[12] * this.m[10]) + this.m[6] * (this.m[8] * this.m[13] - this.m[12] * this.m[9]);
 		return this.m[0]*d1 - this.m[1]*d2 + this.m[2]*d3 - this.m[3]*d4;
 	},
 
@@ -950,12 +950,12 @@ m3d.Mat4.prototype = {
 	},
 
 	transpose: function() {
-		var tmp1 = this.m[ 1];
-		var tmp2 = this.m[ 2];
-		var tmp3 = this.m[ 3];
-		var tmp4 = this.m[ 6];
-		var tmp5 = this.m[ 7];
-		var tmp6 = this.m[11];
+		let tmp1 = this.m[ 1];
+		let tmp2 = this.m[ 2];
+		let tmp3 = this.m[ 3];
+		let tmp4 = this.m[ 6];
+		let tmp5 = this.m[ 7];
+		let tmp6 = this.m[11];
 
 		this.m[ 1] = this.m[ 4];
 		this.m[ 2] = this.m[ 8];
@@ -973,21 +973,21 @@ m3d.Mat4.prototype = {
 	},
 
 	adjoint: function() {
-		var cofactor_matrix = this.cofactor( );
+		let cofactor_matrix = this.cofactor( );
 		cofactor_matrix.transpose( );
 		this.m = cofactor_matrix.m;
 	},
 
 	invert: function() {
-		var d1 = this.m[5] * (this.m[10] * this.m[15] - this.m[14] * this.m[11]) - this.m[6] * (this.m[9] * this.m[15] - this.m[13] * this.m[11]) + this.m[7] * (this.m[9] * this.m[14] - this.m[13] * this.m[10]);
-		var d2 = this.m[4] * (this.m[10] * this.m[15] - this.m[14] * this.m[11]) - this.m[6] * (this.m[8] * this.m[15] - this.m[12] * this.m[11]) + this.m[7] * (this.m[8] * this.m[14] - this.m[12] * this.m[10]);
-		var d3 = this.m[4] * (this.m[9] * this.m[15] - this.m[13] * this.m[11]) - this.m[5] * (this.m[8] * this.m[15] - this.m[12] * this.m[11]) + this.m[7] * (this.m[8] * this.m[13] - this.m[12] * this.m[9]);
-		var d4 = this.m[4] * (this.m[9] * this.m[14] - this.m[13] * this.m[10]) - this.m[5] * (this.m[8] * this.m[14] - this.m[12] * this.m[10]) + this.m[6] * (this.m[8] * this.m[13] - this.m[12] * this.m[9]);
-		var det = this.m[0]*d1 - this.m[1]*d2 + this.m[2]*d3 - this.m[3]*d4;
+		let d1 = this.m[5] * (this.m[10] * this.m[15] - this.m[14] * this.m[11]) - this.m[6] * (this.m[9] * this.m[15] - this.m[13] * this.m[11]) + this.m[7] * (this.m[9] * this.m[14] - this.m[13] * this.m[10]);
+		let d2 = this.m[4] * (this.m[10] * this.m[15] - this.m[14] * this.m[11]) - this.m[6] * (this.m[8] * this.m[15] - this.m[12] * this.m[11]) + this.m[7] * (this.m[8] * this.m[14] - this.m[12] * this.m[10]);
+		let d3 = this.m[4] * (this.m[9] * this.m[15] - this.m[13] * this.m[11]) - this.m[5] * (this.m[8] * this.m[15] - this.m[12] * this.m[11]) + this.m[7] * (this.m[8] * this.m[13] - this.m[12] * this.m[9]);
+		let d4 = this.m[4] * (this.m[9] * this.m[14] - this.m[13] * this.m[10]) - this.m[5] * (this.m[8] * this.m[14] - this.m[12] * this.m[10]) + this.m[6] * (this.m[8] * this.m[13] - this.m[12] * this.m[9]);
+		let det = this.m[0]*d1 - this.m[1]*d2 + this.m[2]*d3 - this.m[3]*d4;
 
 		if( Math.abs(det) > Number.EPSILON ) // testing if not zero
 		{
-			var cofactor_matrix = new m3d.Mat4(
+			let cofactor_matrix = new m3d.Mat4(
 				+(d1),
 				-(d2),
 				+(d3),
@@ -1033,22 +1033,22 @@ m3d.Mat4.prototype = {
 	},
 
 	x_vector: function() {
-		var arr = this.m.slice( 0, 4 );
+		let arr = this.m.slice( 0, 4 );
 		return new Vec4( arr[0], arr[1], arr[2], arr[3] );
 	},
 
 	y_vector: function() {
-		var arr = this.m.slice( 4, 8 );
+		let arr = this.m.slice( 4, 8 );
 		return new Vec4( arr[0], arr[1], arr[2], arr[3] );
 	},
 
 	z_vector: function() {
-		var arr = this.m.slice( 8, 12 );
+		let arr = this.m.slice( 8, 12 );
 		return new Vec4( arr[0], arr[1], arr[2], arr[3] );
 	},
 
 	w_vector: function() {
-		var arr = this.m.slice( 12, 16 );
+		let arr = this.m.slice( 12, 16 );
 		return new Vec4( arr[0], arr[1], arr[2], arr[3] );
 	},
 
@@ -1061,7 +1061,7 @@ m3d.Mat4.prototype = {
 };
 
 m3d.Mat4.IDENTITY = (function() {
-	var i = new m3d.Mat4( 1, 0, 0, 0,
+	let i = new m3d.Mat4( 1, 0, 0, 0,
 				      0, 1, 0, 0,
 				      0, 0, 1, 0,
 				      0, 0, 0, 1 );
@@ -1070,7 +1070,7 @@ m3d.Mat4.IDENTITY = (function() {
 }());
 
 m3d.Mat4.ZERO = (function() {
-	var z = new m3d.Mat4( 0, 0, 0, 0,
+	let z = new m3d.Mat4( 0, 0, 0, 0,
 	                  0, 0, 0, 0,
 	                  0, 0, 0, 0,
 	                  0, 0, 0, 0 );
@@ -1093,7 +1093,7 @@ m3d.Quat = function( x, y, z, w ) {
 };
 
 m3d.Quat.fromAxisAngle = function( axis, angle ) {
-	var q = new m3d.Quat(
+	let q = new m3d.Quat(
 		Math.cos( angle / 2.0 ),
 		axis.x * Math.sin( angle / 2.0 ),
 		axis.y * Math.sin( angle / 2.0 ),
@@ -1122,11 +1122,11 @@ m3d.Quat.fromMatrix = function( m ) {
 };
 
 m3d.Quat.fromMat3 = function( m ) {
-	var trace = m.m[0] + m.m[4] + m.m[8]; /* add the diagonal values */
+	let trace = m.m[0] + m.m[4] + m.m[8]; /* add the diagonal values */
 
 	if( trace > 0.0 )
 	{
-		var s = 0.5 / Math.sqrt( trace );
+		let s = 0.5 / Math.sqrt( trace );
 
 		return new m3d.Quat(
 			0.25 / s,
@@ -1137,11 +1137,11 @@ m3d.Quat.fromMat3 = function( m ) {
 	}
 	else
 	{
-		var max_diagonal_elem = maxf( m.m[0], maxf( m.m[4], m.m[8] ) );
+		let max_diagonal_elem = maxf( m.m[0], maxf( m.m[4], m.m[8] ) );
 
 		if( Math.abs(m.m[0] - max_diagonal_elem) < Number.EPSILON )
 		{
-			var s = Math.sqrt( 1.0 + m.m[0] - m.m[4] - m.m[8] ) * 2.0;
+			let s = Math.sqrt( 1.0 + m.m[0] - m.m[4] - m.m[8] ) * 2.0;
 
 			return new m3d.Quat(
 				0.5 / s,
@@ -1152,7 +1152,7 @@ m3d.Quat.fromMat3 = function( m ) {
 		}
 		else if( Math.abs(m.m[4] - max_diagonal_elem) < Number.EPSILON )
 		{
-			var s = Math.sqrt( 1.0 + m.m[4] - m.m[0] - m.m[8] ) * 2.0;
+			let s = Math.sqrt( 1.0 + m.m[4] - m.m[0] - m.m[8] ) * 2.0;
 
 			return new m3d.Quat(
 				(m.m[1] + m.m[3]) / s,
@@ -1163,7 +1163,7 @@ m3d.Quat.fromMat3 = function( m ) {
 		}
 		else
 		{
-			var s = Math.sqrt( 1.0 + m.m[8] - m.m[0] - m.m[4] ) * 2.0;
+			let s = Math.sqrt( 1.0 + m.m[8] - m.m[0] - m.m[4] ) * 2.0;
 
 			return new m3d.Quat(
 				(m.m[2] + m.m[6]) / s,
@@ -1176,11 +1176,11 @@ m3d.Quat.fromMat3 = function( m ) {
 };
 
 m3d.Quat.fromMat4 = function( m ) {
-	var trace = m.m[0] + m.m[5] + m.m[10] + 1; /* add the diagonal values */
+	let trace = m.m[0] + m.m[5] + m.m[10] + 1; /* add the diagonal values */
 
 	if( trace > 0.0 )
 	{
-		var s = 0.5 / Math.sqrt( trace );
+		let s = 0.5 / Math.sqrt( trace );
 
 		return new m3d.Quat(
 			0.25 / s,
@@ -1191,11 +1191,11 @@ m3d.Quat.fromMat4 = function( m ) {
 	}
 	else
 	{
-		var max_diagonal_elem = maxf( m.m[0], maxf( m.m[5], m.m[10] ) );
+		let max_diagonal_elem = maxf( m.m[0], maxf( m.m[5], m.m[10] ) );
 
 		if( Math.abs(m.m[0] - max_diagonal_elem) < Number.EPSILON )
 		{
-			var s = Math.sqrt( 1.0 + m.m[0] - m.m[5] - m.m[10] ) * 2.0;
+			let s = Math.sqrt( 1.0 + m.m[0] - m.m[5] - m.m[10] ) * 2.0;
 
 			return new m3d.Quat(
 				0.5 / s,
@@ -1206,7 +1206,7 @@ m3d.Quat.fromMat4 = function( m ) {
 		}
 		else if( Math.abs(m.m[5] - max_diagonal_elem) < Number.EPSILON )
 		{
-			var s = Math.sqrt( 1.0 + m.m[5] - m.m[0] - m.m[10] ) * 2.0;
+			let s = Math.sqrt( 1.0 + m.m[5] - m.m[0] - m.m[10] ) * 2.0;
 
 			return new m3d.Quat(
 				(m.m[1] + m.m[4]) / s,
@@ -1217,7 +1217,7 @@ m3d.Quat.fromMat4 = function( m ) {
 		}
 		else
 		{
-			var s = Math.sqrt( 1.0 + m.m[10] - m.m[0] - m.m[5] ) * 2.0;
+			let s = Math.sqrt( 1.0 + m.m[10] - m.m[0] - m.m[5] ) * 2.0;
 
 			return new m3d.Quat(
 				(m.m[2] + m.m[8]) / s,
@@ -1235,7 +1235,7 @@ m3d.Quat.prototype = {
 	},
 
 	normalize: function() {
-		var magnitude = this.magnitude( );
+		let magnitude = this.magnitude( );
 		if( magnitude > 0.0 ) {
 			this.w /= magnitude;
 			this.x /= magnitude;
@@ -1283,11 +1283,11 @@ m3d.Quat.prototype = {
 	},
 
 	rotate: function( v ) {
-		var q_v = m3d.Quat.fromVector( v );
+		let q_v = m3d.Quat.fromVector( v );
 
-		var q_inverse = this.conjugate( );
-		var q_v_inverse = q_v.multiply( q_inverse );
-		var q_result = q.multiply( q_v_inverse );
+		let q_inverse = this.conjugate( );
+		let q_v_inverse = q_v.multiply( q_inverse );
+		let q_result = q.multiply( q_v_inverse );
 
 		return new Vec4( q_result.x, q_result.y, q_result.z, 0.0 );
 	},
@@ -1315,7 +1315,7 @@ m3d.Quat.prototype = {
 
 	extractAxisAndAngle: function( axis, angle ) {
 		angle = Math.acos( this.w ) * 2.0;
-		var sin_angle = Math.sin( 0.5 * angle );
+		let sin_angle = Math.sin( 0.5 * angle );
 
 		axis.x = this.x / sin_angle;
 		axis.y = this.y / sin_angle;
@@ -1342,8 +1342,8 @@ m3d.transforms = {
 	},
 
 	rotateX: function( a ) {
-		var s = Math.sin( a );
-		var c = Math.cos( a );
+		let s = Math.sin( a );
+		let c = Math.cos( a );
 
 		return new m3d.Mat4(
 			1.0, 0.0, 0.0, 0.0,
@@ -1354,8 +1354,8 @@ m3d.transforms = {
 	},
 
 	rotateY: function( a ) {
-		var s = Math.sin( a );
-		var c = Math.cos( a );
+		let s = Math.sin( a );
+		let c = Math.cos( a );
 
 		return new m3d.Mat4(
 			  c, 0.0,   s, 0.0,
@@ -1366,8 +1366,8 @@ m3d.transforms = {
 	},
 
 	rotateZ: function( a ) {
-		var s = Math.sin( a );
-		var c = Math.cos( a );
+		let s = Math.sin( a );
+		let c = Math.cos( a );
 
 		return new m3d.Mat4(
 			  c,  -s, 0.0, 0.0,
@@ -1378,9 +1378,9 @@ m3d.transforms = {
 	},
 
 	rotateFromVectorToVector: function( s, t ) {
-		var v = s.crossProduct( t );
-		var e = s.dotProduct( t );
-		var h = 1 / (1 + e);
+		let v = s.crossProduct( t );
+		let e = s.dotProduct( t );
+		let h = 1 / (1 + e);
 
 		return new m3d.Mat4(
 			  e + h * v.x * v.x,   h * v.x * v.y + v.z,   h * v.x * v.z - v.y,  0,
@@ -1420,12 +1420,12 @@ m3d.transforms = {
 
 	/* Beware of gimbal lock when any angle is set to +/- HALF_PI */
 	eulerTransform: function( h, p, r ) {
-		var sin_h = Math.sin( h );
-		var cos_h = Math.cos( h );
-		var sin_p = Math.sin( p );
-		var cos_p = Math.cos( p );
-		var sin_r = Math.sin( r );
-		var cos_r = Math.cos( r );
+		let sin_h = Math.sin( h );
+		let cos_h = Math.cos( h );
+		let sin_p = Math.sin( p );
+		let cos_p = Math.cos( p );
+		let sin_r = Math.sin( r );
+		let cos_r = Math.cos( r );
 
 		return new m3d.Mat4(
 			cos_r * cos_h - sin_r * sin_p * sin_h,   sin_r * cos_h + cos_r * sin_p * sin_h,   -cos_p * sin_h,   0,
@@ -1508,13 +1508,13 @@ m3d.transforms = {
 	},
 
 	lookAt: function( eye, target, up ) {
-		var z = new m3d.Vec3( target.x - eye.x, target.y - eye.y, target.z - eye.z );
+		let z = new m3d.Vec3( target.x - eye.x, target.y - eye.y, target.z - eye.z );
 		z.normalize( );
 
-		var x = z.crossProduct( up );
+		let x = z.crossProduct( up );
 		x.normalize( );
 
-		var y = x.crossProduct( z );
+		let y = x.crossProduct( z );
 		y.normalize( );
 
 		return new m3d.Mat4(
@@ -1541,12 +1541,12 @@ m3d.transforms.projections = {
 	},
 
 	frustum: function( left, right, bottom, top, near, far ) {
-		var A = 2.0 * near / (right - left);
-		var B = (right + left) / (right - left);
-		var C = 2.0 * near / (top - bottom);
-		var D = (top + bottom) / (top - bottom);
-		var E = -(far + near) / (far - near);
-		var F = -(2.0 * far * near) / (far - near);
+		let A = 2.0 * near / (right - left);
+		let B = (right + left) / (right - left);
+		let C = 2.0 * near / (top - bottom);
+		let D = (top + bottom) / (top - bottom);
+		let E = -(far + near) / (far - near);
+		let F = -(2.0 * far * near) / (far - near);
 
 		return new m3d.Mat4(
 			  A,  0.0,    B,  0.0,
@@ -1557,9 +1557,9 @@ m3d.transforms.projections = {
 	},
 
 	perspective: function( fov, aspect, near, far ) {
-		var A = 1.0 / Math.tan(fov * 0.5);
-		var B = -far / (far - near);
-		var C = -(far * near)/ (far - near);
+		let A = 1.0 / Math.tan(fov * 0.5);
+		let B = -far / (far - near);
+		let C = -(far * near)/ (far - near);
 
 		return new m3d.Mat4(
 			A/aspect,  0.0,  0.0,  0.0,
@@ -1573,9 +1573,9 @@ m3d.transforms.projections = {
 m3d.tools = {
 
 	normalFromTrianangle: function( v1, v2, v3 ) {
-		var vec1 = new m3d.Vec3( v2.x - v1.x, v2.y - v1.y, v2.z - v1.z );
-		var vec2 = new m3d.Vec3( v3.x - v1.x, v3.y - v1.y, v3.z - v1.z );
-		var normal = vec1.crossProduct( vec2 );
+		let vec1 = new m3d.Vec3( v2.x - v1.x, v2.y - v1.y, v2.z - v1.z );
+		let vec2 = new m3d.Vec3( v3.x - v1.x, v3.y - v1.y, v3.z - v1.z );
+		let normal = vec1.crossProduct( vec2 );
 		normal.normalize();
 		return normal;
 	},
@@ -1596,13 +1596,13 @@ m3d.tools = {
 		 *
 		 * This function extends this idea to an arbitrary number of triangles.
 		 */
-		var number_of_triangles = points.length / 3;
+		let number_of_triangles = points.length / 3;
 
-		var normal = m3d.Vec3.ZERO;
+		let normal = m3d.Vec3.ZERO;
 
-		for( var i = 0; i < points.length; i += 3 )
+		for( let i = 0; i < points.length; i += 3 )
 		{
-			var n = m3d.tools.normalFromTrianangle( points[ i + 0], points[ i + 1 ], points[ i + 2 ] );
+			let n = m3d.tools.normalFromTrianangle( points[ i + 0], points[ i + 1 ], points[ i + 2 ] );
 
 			if( normal.dotProduct( n ) < 0.0 )
 			{
@@ -1622,9 +1622,9 @@ m3d.tools = {
 	/* Point in screen space to world space */
 	pointUnproject: function( point, projection, model, viewport ) {
 		/* Convert to normalized device coordinates */
-		var normalized_device_coordinate = new m3d.Vec4( ((point.x * 2.0) / viewport[2]) - 1.0, ((point.y * 2.0) / viewport[3]) - 1.0, 0.0, 1.0 );
+		let normalized_device_coordinate = new m3d.Vec4( ((point.x * 2.0) / viewport[2]) - 1.0, ((point.y * 2.0) / viewport[3]) - 1.0, 0.0, 1.0 );
 
-		var inv_projmodel = projection.multiplyMatrix( model );
+		let inv_projmodel = projection.multiplyMatrix( model );
 		inv_projmodel.invert( );
 
 		return inv_projmodel.multiplyVector( normalized_device_coordinate );
@@ -1632,11 +1632,14 @@ m3d.tools = {
 
 	/* Point in world space to screen space */
 	pointProject: function( point, projection, model, viewport ) {
-		var projmodel = projection.multiplyMatrix( model );
-		var pt = projmodel.multiplyMatrix( point );
+		let projmodel = projection.multiplyMatrix( model );
+		let pt = projmodel.multiplyMatrix( point );
 
 		return new m3d.Vec2( ((1.0 + pt.x) * viewport[2]) / 2.0, ((1.0 + pt.y) * viewport[3]) / 2.0 );
 	},
 };
 
-module.exports = m3d;
+// Export module if executing in Node.js
+if (typeof window === 'undefined') {
+    module.exports = m3d;
+}

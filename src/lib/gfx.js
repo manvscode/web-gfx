@@ -199,7 +199,9 @@ export class GFX {
 			return t;
 		};
 
-		this.gl = canvas.getContext('webgl', attributes) || canvas.getContext('experimental-webgl', attributes);
+		this.gl = canvas.getContext('webgl2', attributes) ||
+                  canvas.getContext('webgl', attributes) ||
+                  canvas.getContext('experimental-webgl', attributes);
 		if( !this.gl ) {
 			throw "Bad WebGL context.";
 		}
