@@ -1,26 +1,27 @@
+import { GFX, Uniform } from './lib/gfx.js';
 import { Renderable } from './renderable.js';
 import { UnderwaterBaseModel } from '../assets/models/underwater-base.js';
 
 export class UnderwaterBase extends Renderable {
 	constructor( gfx ) {
 		super(gfx);
-        let gl = gfx.getContext();
+        let gl = this.gfx.getContext();
 
-        this.vboHull           = gfx.bufferCreate( new Float32Array(UnderwaterBaseModel.underwaterbase), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
+        this.vboHull           = this.gfx.bufferCreate( new Float32Array(UnderwaterBaseModel.underwaterbase), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboHull.itemSize  = 8;
         this.vboHull.itemCount = UnderwaterBaseModel.underwaterbase.length / 8;
 
-        this.vboGlass           = gfx.bufferCreate( new Float32Array(UnderwaterBaseModel.glass), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
+        this.vboGlass           = this.gfx.bufferCreate( new Float32Array(UnderwaterBaseModel.glass), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboGlass.itemSize  = 8;
         this.vboGlass.itemCount = UnderwaterBaseModel.glass.length / 8;
 
-        gfx.assertNoError( );
+        this.gfx.assertNoError( );
 	}
 
 	render(shader) {
         let gl = this.gfx.getContext();
 
-        let mv = gfx.cameraView.multiply( GFX.Math.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
+        let mv = this.gfx.cameraView.multiply( GFX.Math.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
 		let normalMatrix = GFX.Math.Transforms.orientationMatrix3(mv);
 		normalMatrix.invert();
 
@@ -29,7 +30,7 @@ export class UnderwaterBase extends Renderable {
             { name: Uniform.color, value: new GFX.Math.Vector4(1.0, 1.0, 1.0, 1.0) },
             { name: Uniform.texture0, value: 0 },
             { name: Uniform.texture1, value: 1 },
-            { name: Uniform.projectionMatrix, transpose: false, value: gfx.perspectiveMatrix },
+            { name: Uniform.projectionMatrix, transpose: false, value: this.gfx.perspectiveMatrix },
             { name: Uniform.modelView, transpose: false, value: mv },
             { name: Uniform.normalMatrix, transpose: true, value: normalMatrix },
         ]);

@@ -1,0 +1,27 @@
+{
+  "name": "web-gfx",
+  "version": "1.0.0",
+  "description": "A minimalistic WebGL framework.",
+  "type": "module",
+  "scripts": {
+    "build": "./node_modules/traceur/traceur --outputLanguage=es6 --source-maps file --dir src dist/js",
+    "clean": "node clean.js",
+    "server": "node ./node_modules/serve/bin/serve.js dist/",
+    "publish": "node publish.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/manvscode/web-gfx.git"
+  },
+  "author": "Joe Marrero",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/manvscode/web-gfx#readme",
+  "dependencies": {
+    "serve": "^13.0.2"
+  },
+  "devDependencies": {
+    "server": "^1.0.37",
+    "traceur": "0.0.111",
+    "zip-dir": "^2.0.0"
+  }
+}

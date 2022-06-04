@@ -1,3 +1,6 @@
+import m3d from './m3d.js';
+
+
 export class Color {
 	constructor(r, g, b, a) {
 		this.r = r || 0;

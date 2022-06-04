@@ -1,32 +1,33 @@
+import { GFX, Uniform } from './lib/gfx.js';
 import { Renderable } from './renderable.js';
 import { SubmarineModel } from '../assets/models/sub.js';
 
 export class Submarine extends Renderable {
 	constructor( gfx ) {
 		super(gfx);
-        let gl = gfx.getContext();
+        let gl = this.gfx.getContext();
 
-        this.vboHull           = gfx.bufferCreate( new Float32Array(SubmarineModel.hull), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
+        this.vboHull           = this.gfx.bufferCreate( new Float32Array(SubmarineModel.hull), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboHull.itemSize  = 8;
         this.vboHull.itemCount = SubmarineModel.hull.length / 8;
 
-        this.vboDivePlane           = gfx.bufferCreate( new Float32Array(SubmarineModel.divePlane), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
+        this.vboDivePlane           = this.gfx.bufferCreate( new Float32Array(SubmarineModel.divePlane), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboDivePlane.itemSize  = 8;
         this.vboDivePlane.itemCount = SubmarineModel.divePlane.length / 8;
 
-        this.vboLeftProp           = gfx.bufferCreate( new Float32Array(SubmarineModel.leftProp), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
+        this.vboLeftProp           = this.gfx.bufferCreate( new Float32Array(SubmarineModel.leftProp), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboLeftProp.itemSize  = 8;
         this.vboLeftProp.itemCount = SubmarineModel.leftProp.length / 8;
 
-        this.vboRightProp           = gfx.bufferCreate( new Float32Array(SubmarineModel.rightProp), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
+        this.vboRightProp           = this.gfx.bufferCreate( new Float32Array(SubmarineModel.rightProp), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboRightProp.itemSize  = 8;
         this.vboRightProp.itemCount = SubmarineModel.rightProp.length / 8;
 
-        this.vboLeftTorpedo           = gfx.bufferCreate( new Float32Array(SubmarineModel.leftTorpedo), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
+        this.vboLeftTorpedo           = this.gfx.bufferCreate( new Float32Array(SubmarineModel.leftTorpedo), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboLeftTorpedo.itemSize  = 8;
         this.vboLeftTorpedo.itemCount = SubmarineModel.leftTorpedo.length / 8;
 
-        this.vboRightTorpedo           = gfx.bufferCreate( new Float32Array(SubmarineModel.rightTorpedo), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
+        this.vboRightTorpedo           = this.gfx.bufferCreate( new Float32Array(SubmarineModel.rightTorpedo), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vboRightTorpedo.itemSize  = 8;
         this.vboRightTorpedo.itemCount = SubmarineModel.rightTorpedo.length / 8;
 
@@ -39,7 +40,7 @@ export class Submarine extends Renderable {
         let gl = this.gfx.getContext();
 
 		let transform = GFX.Math.Transforms.rigidBodyTransform( this.orientation,  this.position, this.scale );
-        let mv = gfx.cameraView.multiply( transform );
+        let mv = this.gfx.cameraView.multiply( transform );
 
 		let normalMatrix = GFX.Math.Transforms.orientationMatrix3(mv);
 		normalMatrix.invert();
@@ -49,7 +50,7 @@ export class Submarine extends Renderable {
             { name: Uniform.color, value: new GFX.Math.Vector4(1.0, 1.0, 1.0, 1.0) },
             { name: Uniform.texture0, value: 0 },
             { name: Uniform.texture1, value: 1 },
-            { name: Uniform.projectionMatrix, transpose: false, value: gfx.perspectiveMatrix },
+            { name: Uniform.projectionMatrix, transpose: false, value: this.gfx.perspectiveMatrix },
             { name: Uniform.modelView, transpose: false, value: mv },
             { name: Uniform.normalMatrix, transpose: true, value: normalMatrix },
         ]);

@@ -28,6 +28,7 @@ const setup = (gfx) => {
     gfx.caustic           = 0;
     gfx.causticUpdateFreq = 60;
     gfx.lastCausticUpdate = gfx.now();
+	gfx.cameraView        = GFX.Math.Matrix4.IDENTITY;
 
     let gl = gfx.getContext();
     gfx.printInfo();

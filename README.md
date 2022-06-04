@@ -1,7 +1,7 @@
 # Web-gfx
 A minimalistic WebGL framework.
 
-[![Timezoner](images/sub-on-the-ocean-floor.gif)](https://joemarrero.com/static/sub-on-the-ocean-floor/index.html)
+[![Demo](images/sub-on-the-ocean-floor.gif)](https://joemarrero.com/static/sub-on-the-ocean-floor/index.html)
 
 
 ## License

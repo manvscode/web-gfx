@@ -1,3 +1,4 @@
+import { GFX, Uniform } from './lib/gfx.js';
 import { Renderable } from './renderable.js';
 import { OceanFloorModel } from '../assets/models/oceanfloor.js';
 
@@ -13,25 +14,25 @@ export class OceanFloor extends Renderable {
             //OceanFloorModel.OceanFloor[ i + 2 ] *= 1.3;
         //}
 
-        this.vbo           = gfx.bufferCreate( new Float32Array(OceanFloorModel.OceanFloor), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
+        this.vbo           = this.gfx.bufferCreate( new Float32Array(OceanFloorModel.OceanFloor), gl.ARRAY_BUFFER, gl.STATIC_DRAW );
         this.vbo.itemSize  = 8;
         this.vbo.itemCount = OceanFloorModel.OceanFloor.length / 8;
-        gfx.assertNoError( );
+        this.gfx.assertNoError( );
     }
 
     render(shader) {
         let gl = this.gfx.getContext();
 
-        let mv = gfx.cameraView.multiply( GFX.Math.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
+        let mv = this.gfx.cameraView.multiply( GFX.Math.Transforms.rigidBodyTransform( this.orientation, this.position, this.scale ) );
 
         shader.prepare([
             { name: "useTexture", value: 1 },
             { name: Uniform.color, value: new GFX.Math.Vector4(1.0, 1.0, 1.0, 1.0) },
             { name: Uniform.texture0, value: 0 },
             { name: Uniform.texture1, value: 1 },
-            { name: Uniform.projectionMatrix, transpose: false, value: gfx.perspectiveMatrix },
+            { name: Uniform.projectionMatrix, transpose: false, value: this.gfx.perspectiveMatrix },
             { name: Uniform.modelView, transpose: false, value: mv },
-            { name: Uniform.normalMatrix, transpose: false, value: gfx.normalMatrix },
+            { name: Uniform.normalMatrix, transpose: false, value: this.gfx.normalMatrix },
         ]);
 
         gl.activeTexture( gl.TEXTURE0 );
