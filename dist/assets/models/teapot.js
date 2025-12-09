@@ -4,8 +4,8 @@
  *   z,
  * };
  */
-const teapot = {
-	"default": [
+export const TeapotModel = {
+	"vertices": [
 		//      position-X,      position-Y,      position-Z
 		//----------------------------------------------------------
 		     +1.3680740595,   +2.4354369640,   -0.2274030000,
@@ -18970,8 +18970,3 @@ const teapot = {
 		     +1.5000000000,   +0.1500000060,   +0.0000000000
 	]
 };
-
-// Export module if executing in Node.js
-if (typeof window === 'undefined') {
-	module.exports = teapot;
-}

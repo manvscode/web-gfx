@@ -4,7 +4,7 @@
   "description": "A minimalistic WebGL framework.",
   "type": "module",
   "scripts": {
-    "build": "./node_modules/traceur/traceur --outputLanguage=es6 --source-maps file --dir src dist/js",
+    "build": "./node_modules/traceur/traceur --outputLanguage=es6 --validate --source-maps file --dir src dist/js",
     "clean": "node clean.js",
     "server": "node ./node_modules/serve/bin/serve.js dist/",
     "publish": "node publish.js"
